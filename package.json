@@ -1,8 +1,37 @@
 {
   "name": "ts-json-api",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "license": "MIT",
   "description": "Typescript definitions for jsonapi.org schema",
   "author": "Ryan Marganti <ryanmarganti@soulsizzle.com>",
-  "types": "index.d.ts"
+  "main": "./ts-json-api.ts",
+  "types": "index.d.ts",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "devDependencies": {
+    "@types/jest": "^21.1.6",
+    "@types/node": "^8.0.53",
+    "@types/ramda": "^0.25.6",
+    "jest": "^21.2.1",
+    "ts-jest": "^21.2.3",
+    "tslint": "^5.8.0",
+    "typescript": "^2.6.1"
+  },
+  "jest": {
+    "transform": {
+      ".(ts|tsx)": "<rootDir>/__tests__/preprocessor.js"
+    },
+    "testRegex": "(\\.(test|spec))\\.(ts|tsx|js)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "json"
+    ]
+  },
+  "dependencies": {
+    "ramda": "^0.25.0"
+  }
 }
