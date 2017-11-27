@@ -1,8 +1,8 @@
 import 'jest';
 import { clone } from 'ramda';
 
-import Entity from '../Entity';
-import { ResourceObject } from '../JsonAPIStructure';
+import Entity from '../src/Entity';
+import { ResourceObject } from '../src/JsonAPIStructure';
 const mockResponse = require('./mocks/JsonApiResponse.json');
 
 describe('Entity', () => {
@@ -16,21 +16,14 @@ describe('Entity', () => {
         expect(entity.attribute('title')).toEqual('JSON API paints my bikeshed!');
         expect(Object.keys(entity.relationships())).toEqual(['author', 'comments']);
 
-        expect(entity.relationship('author')).toEqual({
-            "type": "people",
-            "id": "9"
-        });
+        expect((<Entity>entity.relationship('author')).id()).toEqual('9');
+        expect((<Entity>entity.relationship('author')).type()).toEqual('people');
 
-        expect(entity.relationship('comments')).toEqual([
-            {
-                "type": "comments",
-                "id": "5"
-            },
-            {
-                "type": "comments",
-                "id": "12"
-            }
-        ]);
+        expect((<Entity[]>entity.relationship('comments'))[0].id()).toEqual('5');
+        expect((<Entity[]>entity.relationship('comments'))[0].type()).toEqual('comments');
+
+        expect((<Entity[]>entity.relationship('comments'))[1].id()).toEqual('12');
+        expect((<Entity[]>entity.relationship('comments'))[1].type()).toEqual('comments');
     });
 
     it('updated an Entity\'s attributes immutably', () => {
@@ -52,12 +45,12 @@ describe('Entity', () => {
     it('adds a relationship immutably', () => {
         const result = entity.addRelationship('comments', 'comments', '4444');
 
-        expect((<ResourceObject[]>entity.relationship('comments')).map(comment => comment.id)).toEqual([
+        expect((<Entity[]>entity.relationship('comments')).map(comment => comment.id())).toEqual([
             '5',
             '12',
         ]);
 
-        expect((<ResourceObject[]>result.relationship('comments')).map(comment => comment.id)).toEqual([
+        expect((<Entity[]>result.relationship('comments')).map(comment => comment.id())).toEqual([
             '5',
             '12',
             '4444',
@@ -67,12 +60,12 @@ describe('Entity', () => {
     it('removes a relationship immutably', () => {
         const result = entity.removeRelationship('comments', '5');
 
-        expect((<ResourceObject[]>entity.relationship('comments')).map(comment => comment.id)).toEqual([
+        expect((<Entity[]>entity.relationship('comments')).map(comment => comment.id())).toEqual([
             '5',
             '12',
         ]);
 
-        expect((<ResourceObject[]>result.relationship('comments')).map(comment => comment.id)).toEqual([
+        expect((<Entity[]>result.relationship('comments')).map(comment => comment.id())).toEqual([
             '12',
         ]);
     });

@@ -1,2 +1,2 @@
-export * from './JsonApiStructure';
-export { default as Entity } from './Entity';
+export * from './src/JsonApiStructure';
+export { default as Entity } from './src/Entity';
