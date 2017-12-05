@@ -1,21 +1,17 @@
-import { assocPath, append, clone, path } from 'ramda';
+import {
+    assocPath, append, clone, identity, ifElse, flip, lensPath, lensProp,
+    map, merge, omit, over, path, pipe, prop, props, propEq, reject, set
+} from 'ramda';
 
 import { Attributes, ResourceObject, Relationships} from './JsonAPIStructure';
 
+const mergeReverse = flip(merge);
+
 export default class Entity {
-    private readonly _type: string;
-
-    private readonly _id?: string;
-
-    private readonly _attributes: Attributes;
-
-    private readonly _relationships: Relationships;
+    private data: ResourceObject;
 
     constructor(resourceObject: ResourceObject) {
-        this._type = resourceObject.type;
-        this._id = resourceObject.id;
-        this._attributes = resourceObject.attributes || {};
-        this._relationships = resourceObject.relationships || {};
+        this.data = resourceObject;
 
         Object.freeze(this);
     }
@@ -42,7 +38,7 @@ export default class Entity {
      * @return {String}
      */
     type(): string {
-        return this._type;
+        return prop('type', this.data);
     }
 
     /**
@@ -51,14 +47,14 @@ export default class Entity {
      * @return {String|undefined}
      */
     id(): string | undefined {
-        return this._id;
+        return prop('id', this.data);
     }
 
     /**
      * Return all Attributes
      */
     attributes(): Attributes {
-        return Object.assign({}, this._attributes);
+        return prop('attributes', this.data);
     }
 
     /**
@@ -67,7 +63,7 @@ export default class Entity {
      * @param name
      */
     attribute(name: string) {
-        return this._attributes[name];
+        return path(['attributes', name], this.data);
     }
 
     /**
@@ -76,28 +72,30 @@ export default class Entity {
      * @return {Object}
      */
     relationships(): Relationships {
-        return Object.keys(this._relationships).reduce((carrier, relationshipName) => {
-            return {
-                ...carrier,
-                [relationshipName]: this.relationship(relationshipName),
-            };
-        }, {});
+        return prop('relationships', this.data);
     }
 
     /**
      * Return a single Relationship value
      *
-     * @param name
+     * @param  name
+     * @return Entity|Entity[]
      */
     relationship(name: string) {
-        if (!this._relationships[name]) {
-            return undefined;
-        }
+        const convertToEntity = (relationship: ResourceObject) => new Entity(relationship);
 
-        return (Array.isArray(this._relationships[name].data))
-            ? (<ResourceObject[]>this._relationships[name].data)
-                .map((relationship: ResourceObject)  => new Entity(relationship))
-            : new Entity(<ResourceObject>this._relationships[name].data);
+        const convertToEntityOrEntities = ifElse(
+            Array.isArray,
+            map(convertToEntity),
+            convertToEntity
+        );
+
+        const isDefined = (item: any): boolean => typeof item !== 'undefined';
+
+        return pipe(
+            path(['relationships', name, 'data']),
+            ifElse(isDefined, convertToEntityOrEntities, () => undefined)
+        )(this.data);
     }
 
     /**
@@ -106,9 +104,13 @@ export default class Entity {
      * @param {Attributes} payload
      */
     update(payload: Attributes = {}) {
-        return this.cloneAndUpdate({
-            attributes: Object.assign({}, this._attributes, payload),
-        });
+        const updatedData = over(
+            lensProp('attributes'),
+            mergeReverse(payload),
+            this.data
+        );
+
+        return new Entity(updatedData);
     }
 
     /**
@@ -119,48 +121,59 @@ export default class Entity {
      * @param {string} id
      */
     addRelationship(relationship: string, type: string, id: string) {
-        const updated = append(
-            {
-                type,
-                id
-            },
-            path([relationship, 'data'], this._relationships) || []
+        const updatedData = over(
+            lensPath(['relationships', relationship, 'data']),
+            append({ type, id }),
+            this.data
         );
 
-        const added = assocPath(
-            [relationship, 'data'],
-            updated,
-            this._relationships
-        );
-
-        return this.cloneAndUpdate({
-            relationships: added
-        });
+        return new Entity(updatedData);
     }
 
     /**
-     * Removes a relationships from the Entity
+     * Removes a relationship from the Entity
      *
      * @param {string} type
      * @param {string} id
      */
     removeRelationship(type: string, id: string) {
-        if (this._relationships === undefined || this._relationships[type] === undefined) {
-            return this;
-        }
+        const hasGivenId = propEq('id', id);
 
-        const updatedRelationships = {
-            ...this._relationships,
-            [type]: {
-                ...this._relationships[type],
-                data: (<ResourceObject[]>this._relationships[type].data)
-                    .filter(relationship => relationship.id !== id)
-            }
-        }
+        const updatedData = over(
+            lensPath(['relationships', type, 'data']),
+            reject(hasGivenId),
+            this.data
+        );
 
-        return this.cloneAndUpdate({
-            relationships: updatedRelationships,
-        });
+        return new Entity(updatedData);
+    }
+
+    /**
+     * Set a to-one relationship to the given type and id
+     *
+     * @param {string} relationship
+     * @param {string} type
+     * @param {string} id
+     */
+    setRelationship(relationship: string, type: string, id: string) {
+        const updatedData = set(
+            lensPath(['relationships', relationship, 'data']),
+            { type, id },
+            this.data
+        );
+
+        return new Entity(updatedData)
+    }
+
+    /**
+     * Returns the Entity with the relationships stripped
+     *
+     * @return Entity
+     */
+    withoutRelationships() {
+        return new Entity(
+            omit(['relationships'], this.data)
+        );
     }
 
     /**
@@ -169,28 +182,10 @@ export default class Entity {
      * @param {boolean} includeRelationships
      */
     toJson(includeRelationships: boolean = false) {
-        const response = {
-            type: this._type,
-            id: this._id,
-            attributes: this._attributes,
-        };
-
-        return includeRelationships
-            ? Object.assign(response, { relationships: this._relationships })
-            : response;
-    }
-
-    /**
-     * Create a new Entity with merged current and updated properites
-     *
-     * @param {Object} updatedProperties
-     */
-    private cloneAndUpdate(updatedProperties: object = {}): Entity {
-        return new Entity(Object.assign({
-            id: this._id,
-            type: this._type,
-            attribute: this._attributes,
-            relationships: this._relationships,
-        }, updatedProperties));
+        return ifElse(
+            () => includeRelationships,
+            omit(['relationships']),
+            identity
+        )(this.data);
     }
 }

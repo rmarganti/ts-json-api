@@ -1,12 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const ramda_1 = require("ramda");
+const mergeReverse = ramda_1.flip(ramda_1.merge);
 class Entity {
     constructor(resourceObject) {
-        this._type = resourceObject.type;
-        this._id = resourceObject.id;
-        this._attributes = resourceObject.attributes || {};
-        this._relationships = resourceObject.relationships || {};
+        this.data = resourceObject;
         Object.freeze(this);
     }
     /**
@@ -30,7 +28,7 @@ class Entity {
      * @return {String}
      */
     type() {
-        return this._type;
+        return ramda_1.prop('type', this.data);
     }
     /**
      * Return the ID
@@ -38,13 +36,13 @@ class Entity {
      * @return {String|undefined}
      */
     id() {
-        return this._id;
+        return ramda_1.prop('id', this.data);
     }
     /**
      * Return all Attributes
      */
     attributes() {
-        return Object.assign({}, this._attributes);
+        return ramda_1.prop('attributes', this.data);
     }
     /**
      * Return a single Attribute value
@@ -52,7 +50,7 @@ class Entity {
      * @param name
      */
     attribute(name) {
-        return this._attributes[name];
+        return ramda_1.path(['attributes', name], this.data);
     }
     /**
      * Return all Relationships
@@ -60,17 +58,19 @@ class Entity {
      * @return {Object}
      */
     relationships() {
-        return Object.keys(this._relationships).reduce((carrier, relationshipName) => {
-            return Object.assign({}, carrier, { [relationshipName]: this.relationship(relationshipName) });
-        }, {});
+        return ramda_1.prop('relationships', this.data);
     }
     /**
      * Return a single Relationship value
      *
-     * @param name
+     * @param  name
+     * @return Entity|Entity[]
      */
     relationship(name) {
-        return this._relationships[name] && ramda_1.clone(this._relationships[name].data);
+        const convertToEntity = (relationship) => new Entity(relationship);
+        const convertToEntityOrEntities = ramda_1.ifElse(Array.isArray, ramda_1.map(convertToEntity), convertToEntity);
+        const isDefined = (item) => typeof item !== 'undefined';
+        return ramda_1.pipe(ramda_1.path(['relationships', name, 'data']), ramda_1.ifElse(isDefined, convertToEntityOrEntities, () => undefined))(this.data);
     }
     /**
      * Update the attributes of the Entity
@@ -78,9 +78,8 @@ class Entity {
      * @param {Attributes} payload
      */
     update(payload = {}) {
-        return this.cloneAndUpdate({
-            attributes: Object.assign({}, this._attributes, payload),
-        });
+        const updatedData = ramda_1.over(ramda_1.lensProp('attributes'), mergeReverse(payload), this.data);
+        return new Entity(updatedData);
     }
     /**
      * Add a relationship to the Entity
@@ -90,30 +89,38 @@ class Entity {
      * @param {string} id
      */
     addRelationship(relationship, type, id) {
-        const updated = ramda_1.append({
-            type,
-            id
-        }, ramda_1.path([relationship, 'data'], this._relationships) || []);
-        const added = ramda_1.assocPath([relationship, 'data'], updated, this._relationships);
-        return this.cloneAndUpdate({
-            relationships: added
-        });
+        const updatedData = ramda_1.over(ramda_1.lensPath(['relationships', relationship, 'data']), ramda_1.append({ type, id }), this.data);
+        return new Entity(updatedData);
     }
     /**
-     * Removes a relationships from the Entity
+     * Removes a relationship from the Entity
      *
      * @param {string} type
      * @param {string} id
      */
     removeRelationship(type, id) {
-        if (this._relationships === undefined || this._relationships[type] === undefined) {
-            return this;
-        }
-        const updatedRelationships = Object.assign({}, this._relationships, { [type]: Object.assign({}, this._relationships[type], { data: this._relationships[type].data
-                    .filter(relationship => relationship.id !== id) }) });
-        return this.cloneAndUpdate({
-            relationships: updatedRelationships,
-        });
+        const hasGivenId = ramda_1.propEq('id', id);
+        const updatedData = ramda_1.over(ramda_1.lensPath(['relationships', type, 'data']), ramda_1.reject(hasGivenId), this.data);
+        return new Entity(updatedData);
+    }
+    /**
+     * Set a to-one relationship to the given type and id
+     *
+     * @param {string} relationship
+     * @param {string} type
+     * @param {string} id
+     */
+    setRelationship(relationship, type, id) {
+        const updatedData = ramda_1.set(ramda_1.lensPath(['relationships', relationship, 'data']), { type, id }, this.data);
+        return new Entity(updatedData);
+    }
+    /**
+     * Returns the Entity with the relationships stripped
+     *
+     * @return Entity
+     */
+    withoutRelationships() {
+        return new Entity(ramda_1.omit(['relationships'], this.data));
     }
     /**
      * Output Entity as a JSON-serializable object
@@ -121,27 +128,7 @@ class Entity {
      * @param {boolean} includeRelationships
      */
     toJson(includeRelationships = false) {
-        const response = {
-            type: this._type,
-            id: this._id,
-            attributes: this._attributes,
-        };
-        return includeRelationships
-            ? Object.assign(response, { relationships: this._relationships })
-            : response;
-    }
-    /**
-     * Create a new Entity with merged current and updated properites
-     *
-     * @param {Object} updatedProperties
-     */
-    cloneAndUpdate(updatedProperties = {}) {
-        return new Entity(Object.assign({
-            id: this._id,
-            type: this._type,
-            attribute: this._attributes,
-            relationships: this._relationships,
-        }, updatedProperties));
+        return ramda_1.ifElse(() => includeRelationships, ramda_1.omit(['relationships']), ramda_1.identity)(this.data);
     }
 }
 exports.default = Entity;

@@ -70,6 +70,16 @@ describe('Entity', () => {
         ]);
     });
 
+    it('sets a relationship immutably', () => {
+        const result = entity.setRelationship('editor', 'people', '8675309');
+
+        expect(result.relationship('editor').id()).toEqual('8675309');
+        expect(result.relationship('editor').type()).toEqual('people');
+
+        expect(entity.relationship('editor')).toBeUndefined;
+
+    })
+
     it('can build a new Entity', () => {
         const result = Entity.build('emcee', {
             name: 'SoulSauce',
@@ -83,4 +93,20 @@ describe('Entity', () => {
             status: 'GOAT',
         });
     });
+
+    it('returns the Entity without the relationships', () => {
+        const result = entity.withoutRelationships();
+        expect(entity.id()).toBeDefined;
+        expect(entity.type()).toBeDefined;
+        expect(entity.attributes()).toBeDefined;
+        expect(entity.relationships()).toBeUndefined;
+    })
+
+    it('can return a serializable object', () => {
+        expect(Object.keys(entity.toJson()).sort())
+            .toEqual(['attributes', 'id', 'links', 'relationships', 'type']);
+
+        expect(Object.keys(entity.withoutRelationships().toJson()).sort())
+            .toEqual(['attributes', 'id', 'links', 'type']);
+    })
 });
