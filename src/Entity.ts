@@ -38,7 +38,7 @@ export default class Entity {
      * @return {String}
      */
     type(): string {
-        return prop('type', this.data);
+        return prop('type', this.data as Record<any, any>);
     }
 
     /**
@@ -47,14 +47,14 @@ export default class Entity {
      * @return {String|undefined}
      */
     id(): string | undefined {
-        return prop('id', this.data);
+        return prop('id', this.data as Record<any, any>);
     }
 
     /**
      * Return all Attributes
      */
     attributes(): Attributes {
-        return prop('attributes', this.data);
+        return prop('attributes', this.data as Record<any, any>);
     }
 
     /**
@@ -72,7 +72,7 @@ export default class Entity {
      * @return {Object}
      */
     relationships(): Relationships {
-        return prop('relationships', this.data);
+        return prop('relationships', this.data as Record<any, any>);
     }
 
     /**

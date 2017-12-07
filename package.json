@@ -1,6 +1,6 @@
 {
   "name": "ts-json-api",
-  "version": "0.1.0",
+  "version": "0.2.0-beta",
   "license": "MIT",
   "description": "Typescript definitions for jsonapi.org schema",
   "author": "Ryan Marganti <ryanmarganti@soulsizzle.com>",
