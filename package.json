@@ -10,6 +10,9 @@
     "build": "rimraf ./dist && tsc",
     "test": "jest"
   },
+  "dependencies": {
+    "ramda": "^0.25.0"
+  },
   "devDependencies": {
     "@types/jest": "^21.1.6",
     "@types/node": "^8.0.53",
@@ -31,8 +34,5 @@
       "js",
       "json"
     ]
-  },
-  "dependencies": {
-    "ramda": "^0.25.0"
   }
 }
