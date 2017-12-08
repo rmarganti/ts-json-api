@@ -1,6 +1,6 @@
 import {
     assocPath, append, clone, identity, ifElse, flip, lensPath, lensProp,
-    map, merge, omit, over, path, pipe, prop, props, propEq, reject, set
+    map, merge, omit, over, path, pipe, prop, propOr, props, propEq, reject, set
 } from 'ramda';
 
 import { Attributes, ResourceObject, Relationships} from './JsonAPIStructure';
@@ -71,8 +71,13 @@ export default class Entity {
      *
      * @return {Object}
      */
-    relationships(): Relationships {
-        return prop('relationships', this.data as Record<any, any>);
+    relationships(): any {
+        const relationships = propOr({}, 'relationships', this.data);
+
+        return Object.keys(relationships).reduce((carrier: object, name: string) => ({
+            ...carrier,
+            [name]: this.relationship(name),
+        }), {});
     }
 
     /**
@@ -101,7 +106,7 @@ export default class Entity {
     /**
      * Update the attributes of the Entity
      *
-     * @param {Attributes} payload
+     * @param payload
      */
     update(payload: Attributes = {}) {
         const updatedData = over(
@@ -114,16 +119,19 @@ export default class Entity {
     }
 
     /**
-     * Add a relationship to the Entity
+     * Add a relationship to the Entity by type and id
      *
-     * @param {string} relationship
-     * @param {string} type
-     * @param {string} id
+     * @param relationship
+     * @param typeOrEntity
+     * @param id
      */
-    addRelationship(relationship: string, type: string, id: string) {
+    addRelationship(relationship: string, typeOrEntity: string | Entity, id?: string): Entity {
         const updatedData = over(
             lensPath(['relationships', relationship, 'data']),
-            append({ type, id }),
+            append({
+                type: (typeOrEntity instanceof Entity) ? typeOrEntity.type() : typeOrEntity,
+                id: (typeOrEntity instanceof Entity) ? typeOrEntity.id() : id,
+            }),
             this.data
         );
 
@@ -133,8 +141,8 @@ export default class Entity {
     /**
      * Removes a relationship from the Entity
      *
-     * @param {string} type
-     * @param {string} id
+     * @param type
+     * @param id
      */
     removeRelationship(type: string, id: string) {
         const hasGivenId = propEq('id', id);
@@ -151,14 +159,17 @@ export default class Entity {
     /**
      * Set a to-one relationship to the given type and id
      *
-     * @param {string} relationship
-     * @param {string} type
-     * @param {string} id
+     * @param relationship
+     * @param typeOrEntity
+     * @param id
      */
-    setRelationship(relationship: string, type: string, id: string) {
+    setRelationship(relationship: string, typeOrEntity: string | Entity, id?: string) {
         const updatedData = set(
             lensPath(['relationships', relationship, 'data']),
-            { type, id },
+            {
+                type: typeOrEntity instanceof Entity ? typeOrEntity.type() : typeOrEntity,
+                id: typeOrEntity instanceof Entity ? typeOrEntity.id() : id,
+            },
             this.data
         );
 
@@ -179,7 +190,7 @@ export default class Entity {
     /**
      * Output Entity as a JSON-serializable object
      *
-     * @param {boolean} includeRelationships
+     * @param includeRelationships
      */
     toJson(includeRelationships: boolean = false) {
         return ifElse(

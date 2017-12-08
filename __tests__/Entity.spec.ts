@@ -57,6 +57,22 @@ describe('Entity', () => {
         ]);
     });
 
+    it('ads a another Entity as a relationship', () => {
+        const relationshipEntity = Entity.build('comments', { body: 'Inappropriate relationship' }, '4242');
+        const result = entity.addRelationship('comments', relationshipEntity);
+
+        expect((<Entity[]>entity.relationship('comments')).map(comment => comment.id())).toEqual([
+            '5',
+            '12',
+        ]);
+
+        expect((<Entity[]>result.relationship('comments')).map(comment => comment.id())).toEqual([
+            '5',
+            '12',
+            '4242',
+        ]);
+    });
+
     it('removes a relationship immutably', () => {
         const result = entity.removeRelationship('comments', '5');
 
@@ -78,6 +94,17 @@ describe('Entity', () => {
 
         expect(entity.relationship('editor')).toBeUndefined;
 
+    });
+
+    it('sets a relationship to another Entity immutably', () => {
+        const relationshipEntity = Entity.build('people', {}, '4242');
+
+        const result = entity.setRelationship('editor', relationshipEntity);
+
+        expect(result.relationship('editor').id()).toEqual('4242');
+        expect(result.relationship('editor').type()).toEqual('people');
+
+        expect(entity.relationship('editor')).toBeUndefined;
     })
 
     it('can build a new Entity', () => {
