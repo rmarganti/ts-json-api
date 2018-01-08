@@ -1,39 +1,39 @@
-export interface Attributes {
+export interface iAttributes {
     [index: string]: string | number | boolean,
 }
 
-export interface Relationships {
+export interface iRelationships {
     [index: string]: {
-        data: ResourceObject | ResourceObject[],
-        links?: Links,
-        meta?: Meta,
+        data: iResourceObject | iResourceObject[],
+        links?: iLinks,
+        meta?: iMeta,
     },
 }
 
-export interface LinkObject {
+export interface iLinkObject {
     href: string,
-    meta: Meta,
+    meta: iMeta,
 }
 
-export interface Links {
-    [index: string]: string | LinkObject,
+export interface iLinks {
+    [index: string]: string | iLinkObject,
 }
 
-export interface Meta {
+export interface iMeta {
     [index: string]: any,
 }
 
-export interface ResourceObject {
+export interface iResourceObject {
     type: string,
     id?: string,
-    attributes?: Attributes,
-    relationships?: Relationships,
-    links?: Links,
+    attributes?: iAttributes,
+    relationships?: iRelationships,
+    links?: iLinks,
 }
 
-export interface Error {
+export interface iError {
     id?: string,
-    links?: Links,
+    links?: iLinks,
     status?: string,
     code?: string,
     title?: string,
@@ -42,29 +42,27 @@ export interface Error {
         pointer?: string,
         parameter?: string
     }
-    meta?: Meta,
+    meta?: iMeta,
 }
 
-export interface JsonApiResponseWithData {
-    data: ResourceObject | ResourceObject[],
-    included?: ResourceObject[],
-    links?: Links,
+export interface iJsonApiResponseWithData {
+    data: iResourceObject | iResourceObject[],
+    included?: iResourceObject[],
+    links?: iLinks,
+    errors?: [iError]
+    meta?: iMeta,
 }
 
-export interface JsonApiResponseWithError {
-    errors: [Error]
+export interface iJsonApiResponseWithError {
+    errors: [iError]
+    meta?: iMeta,
 }
 
-export interface JsonApiResponseWithMetaData {
-    meta: Meta,
+export interface iJsonApiResponseWithMetaData {
+    meta: iMeta,
 }
 
-export type JsonApiResponse =
-    JsonApiResponseWithData |
-    JsonApiResponseWithError |
-    JsonApiResponseWithMetaData |
-    (JsonApiResponseWithData & JsonApiResponseWithError) |
-    (JsonApiResponseWithData & JsonApiResponseWithMetaData) |
-    (JsonApiResponseWithError & JsonApiResponseWithMetaData) |
-    (JsonApiResponseWithData & JsonApiResponseWithError & JsonApiResponseWithMetaData);
-
+export type iJsonApiResponse =
+    iJsonApiResponseWithData |
+    iJsonApiResponseWithError |
+    iJsonApiResponseWithMetaData;

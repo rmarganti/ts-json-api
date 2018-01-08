@@ -1,18 +1,16 @@
 import {
     assocPath, append, clone, identity, ifElse, flip, lensPath, lensProp,
-    map, merge, omit, over, path, pipe, prop, propOr, props, propEq, reject, set
+    map, omit, over, path, pipe, prop, propOr, props, propEq, reject, set
 } from 'ramda';
 
-import { Attributes, ResourceObject, Relationships} from './JsonAPIStructure';
-
-const mergeReverse = flip(merge);
+import { iAttributes, iResourceObject, iRelationships} from './JsonAPIStructure';
+import { convertToEntityOrEntities, isDefined, mergeReverse } from './utils';
 
 export default class Entity {
-    private data: ResourceObject;
+    private data: iResourceObject;
 
-    constructor(resourceObject: ResourceObject) {
+    constructor(resourceObject: iResourceObject) {
         this.data = resourceObject;
-
         Object.freeze(this);
     }
 
@@ -24,7 +22,7 @@ export default class Entity {
      * @param attributes
      * @param id
      */
-    static build(type: string, attributes: Attributes, id?: string) {
+    static build(type: string, attributes: iAttributes, id?: string) {
         return new Entity({
             type,
             id,
@@ -51,9 +49,9 @@ export default class Entity {
     }
 
     /**
-     * Return all Attributes
+     * Return all iAttributes
      */
-    attributes(): Attributes {
+    attributes(): iAttributes {
         return prop('attributes', this.data as Record<any, any>);
     }
 
@@ -67,7 +65,7 @@ export default class Entity {
     }
 
     /**
-     * Return all Relationships
+     * Return all iRelationships
      *
      * @return {Object}
      */
@@ -87,16 +85,6 @@ export default class Entity {
      * @return Entity|Entity[]
      */
     relationship(name: string) {
-        const convertToEntity = (relationship: ResourceObject) => new Entity(relationship);
-
-        const convertToEntityOrEntities = ifElse(
-            Array.isArray,
-            map(convertToEntity),
-            convertToEntity
-        );
-
-        const isDefined = (item: any): boolean => typeof item !== 'undefined';
-
         return pipe(
             path(['relationships', name, 'data']),
             ifElse(isDefined, convertToEntityOrEntities, () => undefined)
@@ -108,7 +96,7 @@ export default class Entity {
      *
      * @param payload
      */
-    update(payload: Attributes = {}) {
+    update(payload: iAttributes = {}) {
         const updatedData = over(
             lensProp('attributes'),
             mergeReverse(payload),
@@ -192,7 +180,7 @@ export default class Entity {
      *
      * @param includeRelationships
      */
-    toJson(includeRelationships: boolean = false) {
+    toJSON(includeRelationships: boolean = false) {
         return ifElse(
             () => includeRelationships,
             omit(['relationships']),

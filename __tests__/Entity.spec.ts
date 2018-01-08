@@ -2,7 +2,6 @@ import 'jest';
 import { clone } from 'ramda';
 
 import Entity from '../src/Entity';
-import { ResourceObject } from '../src/JsonAPIStructure';
 const mockResponse = require('./mocks/JsonApiResponse.json');
 
 describe('Entity', () => {
@@ -105,7 +104,7 @@ describe('Entity', () => {
         expect(result.relationship('editor').type()).toEqual('people');
 
         expect(entity.relationship('editor')).toBeUndefined;
-    })
+    });
 
     it('can build a new Entity', () => {
         const result = Entity.build('emcee', {
@@ -127,13 +126,13 @@ describe('Entity', () => {
         expect(entity.type()).toBeDefined;
         expect(entity.attributes()).toBeDefined;
         expect(entity.relationships()).toBeUndefined;
-    })
+    });
 
     it('can return a serializable object', () => {
-        expect(Object.keys(entity.toJson()).sort())
+        expect(Object.keys(entity.toJSON()).sort())
             .toEqual(['attributes', 'id', 'links', 'relationships', 'type']);
 
-        expect(Object.keys(entity.withoutRelationships().toJson()).sort())
+        expect(Object.keys(entity.withoutRelationships().toJSON()).sort())
             .toEqual(['attributes', 'id', 'links', 'type']);
-    })
+    });
 });

@@ -133,8 +133,8 @@ const updatedArticle = article.removeRelationship('comments', '9');
  */
 
 // Helpful for posting to an API and/or working with other libraries
-article.toJson()
+article.toJSON()
 
 // Maybe your API call doesn't want to include relationship info
-article.withoutRelationships().toJson()
+article.withoutRelationships().toJSON()
 ```
