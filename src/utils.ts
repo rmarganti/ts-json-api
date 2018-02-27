@@ -1,23 +1,24 @@
-import { flip, ifElse, map, merge } from 'ramda';
+import { flip, ifElse, map, merge, propEq } from 'ramda';
 
 import { iResourceObject } from './JsonAPIStructure';
-import Entity from './Entity';
+import ResourceObject from './ResourceObject';
 
 /**
- * Converts a Resource Object to an Entity
+ * Converts a Resource Object to an ResourceObject
  *
  * @param resourceObject
  */
-export const convertToEntity = (resourceObject: iResourceObject) => new Entity(resourceObject);
+export const convertToResourceObject = (resourceObject: iResourceObject) =>
+    new ResourceObject(resourceObject);
 
 /**
- * If an Array is provided, it is converted to an Array of Entities.
- * If a single item is provided, it is converted to an Entity
+ * If an Array is provided, it is converted to an Array of ResourceObjects.
+ * If a single item is provided, it is converted to an ResourceObject
  */
-export const convertToEntityOrEntities = ifElse(
+export const convertToResourceObjectOrResourceObjects = ifElse(
     Array.isArray,
-    map(convertToEntity),
-    convertToEntity
+    map(convertToResourceObject),
+    convertToResourceObject
 );
 
 /**
@@ -33,3 +34,10 @@ export const isDefined = (item: any): boolean => typeof item !== 'undefined';
  * data collections
  */
 export const mergeReverse = flip(merge);
+
+/**
+ * Determines if the provided Resource Object has the given ID
+ *
+ * @param id
+ */
+export const hasGivenId = (id: string) => propEq('id', id);

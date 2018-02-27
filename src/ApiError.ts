@@ -5,6 +5,15 @@ class ApiError {
 
     constructor(error: iError) {
         this.error = error;
+        Object.freeze(this);
+    }
+
+    static of(error: iError): ApiError {
+        return new ApiError(error);
+    }
+
+    map(f: (x: iError) => iError) {
+        return ApiError.of(f(this.error));
     }
 }
 

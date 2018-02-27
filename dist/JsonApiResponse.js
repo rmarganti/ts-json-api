@@ -2,75 +2,66 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const ramda_1 = require("ramda");
 const ApiError_1 = require("./ApiError");
-const Entity_1 = require("./Entity");
 const utils_1 = require("./utils");
 class JsonApiResponse {
     constructor(response) {
-        this._data = response.data;
-        this._errors = response.errors;
-        this._links = response.links;
-        this._included = response.included;
-        this._meta = response.meta;
+        this.response = response;
         Object.freeze(this);
+    }
+    static of(response) {
+        return new JsonApiResponse(response);
+    }
+    map(f) {
+        return JsonApiResponse.of(f(this.response));
     }
     /**
      * Retrieve the data from the response
-     * as an Entity or array of Entities
+     * as an ResourceObject or array of ResourceObjects
      */
     data() {
-        return utils_1.convertToEntityOrEntities(this._data);
+        return ramda_1.pipe(ramda_1.prop('data'), utils_1.convertToResourceObjectOrResourceObjects)(this.response);
     }
     /**
      * Retrieve all errors as an array of ApiErrors
      */
     errors() {
-        return this._errors.map(error => new ApiError_1.default(error));
+        return ramda_1.pipe(ramda_1.propOr([], 'errors'), ramda_1.map(ApiError_1.default.of))(this.response);
     }
     /**
      * Does the JsonAPI response have an error?
      */
     hasError() {
-        return this._errors.length > 0;
+        return this.errors().length > 0;
     }
     /**
-     * Retrieves all includes an array of Entities
+     * Retrieves all includes an array of ResourceObjects
      */
     included() {
-        return utils_1.convertToEntityOrEntities(this._included);
+        return ramda_1.pipe(ramda_1.propOr([], 'included'), utils_1.convertToResourceObjectOrResourceObjects)(this.response);
     }
     /**
-     * Expand a partial Entity to the version in the includes. This is
+     * Expand a partial ResourceObject to the version in the includes. This is
      * useful for retrieving the full data from a relationships.
      *
-     * @param entity An partial Entity with only `id` and `type` fields
+     * @param entity An partial ResourceObject with only `id` and `type` fields
      */
     expandInclude(entity) {
-        if (!this._included) {
+        if (this.included().length === 0) {
             return undefined;
         }
-        const foundInclude = this._included.find(include => include.id === entity.id() && include.type === entity.type());
-        if (!foundInclude) {
-            return undefined;
-        }
-        return new Entity_1.default(foundInclude);
+        return this.included().find((include) => {
+            return (include.id() === entity.id() && include.type() === entity.type());
+        });
     }
     meta(name) {
-        if (!this._meta || !name) {
-            return this._meta;
-        }
-        return ramda_1.prop(name, this._meta);
+        const metaFinder = name ? ramda_1.path(['meta', name]) : ramda_1.prop('meta');
+        return metaFinder(this.response);
     }
     /**
      * Map to the original JSON object
      */
     toJSON() {
-        return {
-            data: this._data,
-            errors: this._errors,
-            included: this._included,
-            links: this._links,
-            meta: this._meta,
-        };
+        ramda_1.clone(this.response);
     }
 }
 exports.default = JsonApiResponse;
