@@ -1,4 +1,4 @@
-import { iError } from "./JsonApiStructure";
+import { iError } from './JsonApiStructure';
 
 class ApiError {
     private error: iError;

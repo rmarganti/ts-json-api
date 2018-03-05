@@ -1,6 +1,11 @@
-import { clone, lensProp, map, path, pipe, prop, propOr } from 'ramda';
+import { clone, path, pipe, prop, propOr } from 'ramda';
 
-import { iError, iJsonApiResponse, iResourceObject } from './JsonAPIStructure';
+import {
+    iJsonApiResponse,
+    iJsonApiResponseWithMetaData,
+    iJsonApiResponseWithError,
+    iError,
+} from './JsonAPIStructure';
 import ApiError from './ApiError';
 import ResourceObject from './ResourceObject';
 import { convertToResourceObjectOrResourceObjects } from './utils';
@@ -26,16 +31,18 @@ class JsonApiResponse {
      * as an ResourceObject or array of ResourceObjects
      */
     data(): ResourceObject | ResourceObject[] {
-        return pipe(prop('data'), convertToResourceObjectOrResourceObjects)(
-            this.response
-        );
+        return pipe(
+            propOr(undefined, 'data'),
+            convertToResourceObjectOrResourceObjects
+        )(this.response);
     }
 
     /**
      * Retrieve all errors as an array of ApiErrors
      */
     errors(): ApiError[] {
-        return pipe(propOr([], 'errors'), map(ApiError.of))(this.response);
+        const errors: iError[] = propOr([], 'errors', this.response);
+        return errors.map(ApiError.of);
     }
 
     /**
@@ -74,16 +81,18 @@ class JsonApiResponse {
     }
 
     meta(name: string) {
-        const metaFinder = name ? path(['meta', name]) : prop('meta');
+        const metaFinder: (response: iJsonApiResponseWithMetaData) => any = name
+            ? path(['meta', name])
+            : prop('meta');
 
-        return metaFinder(this.response);
+        return metaFinder(this.response as iJsonApiResponseWithMetaData);
     }
 
     /**
      * Map to the original JSON object
      */
     toJSON() {
-        clone(this.response);
+        return clone(this.response);
     }
 }
 

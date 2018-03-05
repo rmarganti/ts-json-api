@@ -1,19 +1,17 @@
 import {
     append,
     curry,
-    ifElse,
     lensPath,
     lensProp,
     over,
     path,
     prop,
-    propEq,
     propOr,
     reject,
     set,
 } from 'ramda';
 
-import { hasGivenId, isDefined, mergeReverse } from './utils';
+import { hasGivenId, mergeReverse } from './utils';
 import { iAttributes } from './JsonAPIStructure';
 import { iResourceObject } from './index';
 
