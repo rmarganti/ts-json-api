@@ -9,10 +9,13 @@ import {
     propOr,
     reject,
     set,
+    CurriedFunction2,
+    CurriedFunction3,
+    CurriedFunction4,
 } from 'ramda';
 
 import { hasGivenId, mergeReverse } from './utils';
-import { iAttributes } from './JsonAPIStructure';
+import * as JsonApi from './Structure';
 import { iResourceObject } from './index';
 
 export const type = prop('type');
@@ -56,7 +59,7 @@ export const relationship = curry(
  * object -> object -> object
  */
 export const updateAttributes = curry(
-    (payload: iAttributes = {}, resourceObject: iResourceObject) =>
+    (payload: JsonApi.iAttributes = {}, resourceObject: iResourceObject) =>
         over(lensProp('attributes'), mergeReverse(payload), resourceObject)
 );
 

@@ -6,19 +6,19 @@ A collection of TypeScript interfaces and classes for working with [JSONAPI.org]
 
 There library supports JSONAPI standard in all its variations. Therefore, there are a number of interfaces you may find useful.
 
-### JsonApiResponse
+### Response
 
-This is the main interface. It works with any acceptable combination of `JsonApiResponseWithData`, `JsonApiResponseWithError`, & `JsonApiResponseWithMeta`. If you need to target specifc response types, it is recommend you use those more specific interfaces (covered below).
+This is the main interface. It works with any acceptable combination of `ResponseWithData`, `ResponseWithErrors`, & `ResponseWithMeta`. If you need to target specifc response types, it is recommend you use those more specific interfaces (covered below).
 
-### JsonApiResponseWithData
+### ResponseWithData
 
 Use this if you know that the data is a valid JSONAPI response with data. This requires a `data` property (with either a `ResourceObject` or array of `ResourceObject`'s). It may or may not also have includes (`included`) and `links`.
 
-### JsonApiResponseWithError
+### ResponseWithErrors
 
 If your response contains an error, you can target with this interface.
 
-### JsonApiResponseWithmeta
+### ResponseWithmeta
 
 If your response contains only meta data (not super common), this interface can be help
 
@@ -28,7 +28,7 @@ This represents a single ResourceObject in a JSONAPI response. The `data` attrib
 
 ### Other interfaces
 
-Due to JSONAPI's nested structure, it is constructed of a decent number of individual pieces. We recommend taking a look at `src/JsonAPIStructure.ts` for reference. Should you need to target more specific pieces of a response, it should be pretty self-explanitory.
+Due to JSONAPI's nested structure, it is constructed of a decent number of individual pieces. We recommend taking a look at `src/Structure.ts` for reference. Should you need to target more specific pieces of a response, it should be pretty self-explanitory.
 
 ## The `ResourceObject` class
 

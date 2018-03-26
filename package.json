@@ -5,12 +5,12 @@
   "description": "Typescript definitions for jsonapi.org schema",
   "author": "Ryan Marganti <ryanmarganti@soulsizzle.com>",
   "main": "./dist/index.js",
-  "types": "index.d.ts",
   "scripts": {
-    "build": "rimraf ./dist && tsc",
+    "build": "rimraf ./dist && rimraf ./types && tsc",
     "lint": "eslint **/*.ts",
     "test": "jest"
   },
+  "types": "./types",
   "dependencies": {
     "ramda": "^0.25.0"
   },

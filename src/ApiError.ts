@@ -1,18 +1,18 @@
-import { iError } from './JsonApiStructure';
+import * as JsonApi from './Structure';
 
 class ApiError {
-    private error: iError;
+    private error: JsonApi.iError;
 
-    constructor(error: iError) {
+    constructor(error: JsonApi.iError) {
         this.error = error;
         Object.freeze(this);
     }
 
-    static of(error: iError): ApiError {
+    static of(error: JsonApi.iError): ApiError {
         return new ApiError(error);
     }
 
-    map(f: (x: iError) => iError) {
+    map(f: (x: JsonApi.iError) => JsonApi.iError) {
         return ApiError.of(f(this.error));
     }
 }

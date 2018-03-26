@@ -1,28 +1,23 @@
 import { clone, path, pipe, prop, propOr } from 'ramda';
 
-import {
-    iJsonApiResponse,
-    iJsonApiResponseWithMetaData,
-    iJsonApiResponseWithError,
-    iError,
-} from './JsonAPIStructure';
+import * as JsonApi from './Structure';
 import ApiError from './ApiError';
 import ResourceObject from './ResourceObject';
 import { convertToResourceObjectOrResourceObjects } from './utils';
 
 class JsonApiResponse {
-    private response: iJsonApiResponse;
+    private response: JsonApi.iResponse;
 
-    constructor(response: iJsonApiResponse) {
+    constructor(response: JsonApi.iResponse) {
         this.response = response;
         Object.freeze(this);
     }
 
-    static of(response: iJsonApiResponse): JsonApiResponse {
+    static of(response: JsonApi.iResponse): JsonApiResponse {
         return new JsonApiResponse(response);
     }
 
-    map(f: (x: iJsonApiResponse) => iJsonApiResponse): JsonApiResponse {
+    map(f: (x: JsonApi.iResponse) => JsonApi.iResponse): JsonApiResponse {
         return JsonApiResponse.of(f(this.response));
     }
 
@@ -41,12 +36,12 @@ class JsonApiResponse {
      * Retrieve all errors as an array of ApiErrors
      */
     errors(): ApiError[] {
-        const errors: iError[] = propOr([], 'errors', this.response);
+        const errors: JsonApi.iError[] = propOr([], 'errors', this.response);
         return errors.map(ApiError.of);
     }
 
     /**
-     * Does the JsonAPI response have an error?
+     * Does the JsonApi response have an error?
      */
     hasError() {
         return this.errors().length > 0;
@@ -81,11 +76,11 @@ class JsonApiResponse {
     }
 
     meta(name: string) {
-        const metaFinder: (response: iJsonApiResponseWithMetaData) => any = name
-            ? path(['meta', name])
-            : prop('meta');
+        const metaFinder: (
+            response: JsonApi.iResponseWithMetaData
+        ) => any = name ? path(['meta', name]) : prop('meta');
 
-        return metaFinder(this.response as iJsonApiResponseWithMetaData);
+        return metaFinder(this.response as JsonApi.iResponseWithMetaData);
     }
 
     /**

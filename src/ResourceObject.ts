@@ -20,21 +20,18 @@ import {
     set,
 } from 'ramda';
 
-import {
-    iAttributes,
-    iResourceObject,
-    iRelationships,
-} from './JsonAPIStructure';
+import * as JsonApi from './Structure';
+
 import {
     convertToResourceObjectOrResourceObjects,
     isDefined,
     mergeReverse,
 } from './utils';
 
-export default class ResourceObject {
-    private data: iResourceObject;
+class ResourceObject {
+    private data: JsonApi.iResourceObject;
 
-    constructor(resourceObject: iResourceObject) {
+    constructor(resourceObject: JsonApi.iResourceObject) {
         this.data = resourceObject;
         Object.freeze(this);
     }
@@ -44,7 +41,7 @@ export default class ResourceObject {
      *
      * @param resourceObject
      */
-    static of(resourceObject: iResourceObject) {
+    static of(resourceObject: JsonApi.iResourceObject) {
         return new ResourceObject(resourceObject);
     }
 
@@ -54,7 +51,7 @@ export default class ResourceObject {
      *
      * @param f A function that accepts a iResource object and returns another
      */
-    map(f: (x: iResourceObject) => iResourceObject) {
+    map(f: (x: JsonApi.iResourceObject) => JsonApi.iResourceObject) {
         return ResourceObject.of(f(this.data));
     }
 
@@ -66,7 +63,7 @@ export default class ResourceObject {
      * @param attributes
      * @param id
      */
-    static build(type: string, attributes: iAttributes, id?: string) {
+    static build(type: string, attributes: JsonApi.iAttributes, id?: string) {
         return new ResourceObject({
             type,
             id,
@@ -95,7 +92,7 @@ export default class ResourceObject {
     /**
      * Return all iAttributes
      */
-    attributes(): iAttributes {
+    attributes(): JsonApi.iAttributes {
         return prop('attributes', this.data as Record<any, any>);
     }
 
@@ -147,7 +144,7 @@ export default class ResourceObject {
      *
      * @param payload
      */
-    update(payload: iAttributes = {}) {
+    update(payload: JsonApi.iAttributes = {}) {
         const updateAttributes = over(
             lensProp('attributes'),
             mergeReverse(payload)
@@ -253,3 +250,5 @@ export default class ResourceObject {
         )(this.data);
     }
 }
+
+export default ResourceObject;

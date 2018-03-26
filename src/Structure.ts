@@ -1,5 +1,5 @@
 export interface iAttributes {
-    [index: string]: string | number | boolean;
+    [index: string]: string | number | boolean | object;
 }
 
 export interface iRelationships {
@@ -23,10 +23,10 @@ export interface iMeta {
     [index: string]: any;
 }
 
-export interface iResourceObject {
-    type: string;
+export interface iResourceObject<T = string, A = iAttributes> {
+    type: T;
     id?: string;
-    attributes?: iAttributes;
+    attributes?: A;
     relationships?: iRelationships;
     links?: iLinks;
 }
@@ -45,7 +45,7 @@ export interface iError {
     meta?: iMeta;
 }
 
-export interface iJsonApiResponseWithData {
+export interface iResponseWithData {
     data: iResourceObject | iResourceObject[];
     included?: iResourceObject[];
     links?: iLinks;
@@ -53,16 +53,26 @@ export interface iJsonApiResponseWithData {
     meta?: iMeta;
 }
 
-export interface iJsonApiResponseWithError {
+export interface iResponseWithErrors {
+    data?: iResourceObject | iResourceObject[];
+    included?: iResourceObject[];
+    links?: iLinks;
     errors: [iError];
     meta?: iMeta;
 }
 
-export interface iJsonApiResponseWithMetaData {
+export interface iResponseWithMetaData {
+    data?: iResourceObject | iResourceObject[];
+    included?: iResourceObject[];
+    links?: iLinks;
+    errors?: [iError];
     meta: iMeta;
 }
 
-export type iJsonApiResponse =
-    | iJsonApiResponseWithData
-    | iJsonApiResponseWithError
-    | iJsonApiResponseWithMetaData;
+export interface iResponse<D = iResourceObject | iResourceObject[]> {
+    data?: D;
+    included?: iResourceObject[];
+    links?: iLinks;
+    errors?: [iError];
+    meta?: iMeta;
+}
