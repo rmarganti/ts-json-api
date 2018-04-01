@@ -23,40 +23,47 @@ export const id = prop('id');
 
 /**
  * Return all attributes
+ *
+ * @param resourceObject
  */
-export const attributes = prop('attributes');
+export const attributes = (resourceObject: iResourceObject) =>
+    prop('attributes', resourceObject);
 
 /**
  * Return a single Attribute value
  *
- * string -> object -> any
+ * @param attributeName
+ * @param resourceObject
  */
 export const attribute = curry(
-    (name: string, resourceObject: iResourceObject) =>
+    (attributeName: string, resourceObject: iResourceObject) =>
         path(['attributes', name], resourceObject)
 );
 
 /**
- * Return all iRelationships
+ * Return all relationships
  *
- * object -> object
+ * @param resourceObject
  */
-export const relationships = propOr({}, 'relationships');
+export const relationships = (resourceObject: iResourceObject) =>
+    propOr({}, 'relationships', resourceObject);
 
 /**
  * Return a single Relationship value
  *
- * string -> object -> any
+ * @param relationshipName
+ * @param resourceObject
  */
 export const relationship = curry(
-    (name: string, resourceObject: iResourceObject) =>
+    (relationshipName: string, resourceObject: iResourceObject) =>
         path(['relationships', name, 'data'], resourceObject)
 );
 
 /**
  * Update the attributes of the Resource Object
  *
- * object -> object -> object
+ * @param payload
+ * @param resourceObject
  */
 export const updateAttributes = curry(
     (payload: JsonApi.iAttributes = {}, resourceObject: iResourceObject) =>
@@ -66,19 +73,20 @@ export const updateAttributes = curry(
 /**
  * Add a relationship to the Resource Object by type and id
  *
- * @param relationship
- * @param typeOrResource Object
+ * @param relationshipName
+ * @param type
  * @param id
+ * @param resourceObject
  */
 export const addRelationship = curry(
     (
-        relationship: string,
+        relationshipName: string,
         type: string,
         id: string,
         resourceObject: iResourceObject
     ) =>
         over(
-            lensPath(['relationships', relationship, 'data']),
+            lensPath(['relationships', relationshipName, 'data']),
             append({ type, id }),
             resourceObject
         )
@@ -89,6 +97,7 @@ export const addRelationship = curry(
  *
  * @param type
  * @param id
+ * @param resourceObject
  */
 export const removeRelationship = curry(
     (type: string, id: string, resourceObject: iResourceObject) =>
@@ -103,8 +112,9 @@ export const removeRelationship = curry(
  * Set a to-one relationship to the given type and id
  *
  * @param relationship
- * @param typeOrResource Object
+ * @param type
  * @param id
+ * @param resourceObject
  */
 export const setRelationship = curry(
     (
