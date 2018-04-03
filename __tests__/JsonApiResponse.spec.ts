@@ -5,16 +5,8 @@ import ResourceObject from '../src/ResourceObject';
 import JsonApiResponse from '../src/JsonApiResponse';
 import * as JsonApi from '../src/structure';
 
+import { Article, ArticleItemResponse } from './mocks/types';
 const itemResponse: Article = require('./mocks/itemResponse.json');
-
-interface Article extends JsonApi.ResourceObject {
-    type: 'articles';
-    attributes: {
-        title: string;
-    };
-}
-
-type ArticleItemResponse = JsonApi.Response<Article>;
 
 describe('JsonApiResponse', () => {
     let jsonApiResponse: JsonApiResponse<ArticleItemResponse>;

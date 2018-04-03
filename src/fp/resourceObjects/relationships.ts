@@ -32,20 +32,18 @@ export const relationships = (resourceObject: JsonApi.ResourceObject) =>
  */
 export const relationship = curry(
     (relationshipName: string, resourceObject: JsonApi.ResourceObject) =>
-        path(['relationships', name, 'data'], resourceObject)
+        path(['relationships', relationshipName], resourceObject)
 );
 
 /**
- * Update the attributes of the Resource Object
+ * Return a single Relationship value
  *
- * @param payload
+ * @param relationshipName
  * @param resourceObject
  */
-export const updateAttributes = curry(
-    (
-        payload: JsonApi.Attributes = {},
-        resourceObject: JsonApi.ResourceObject
-    ) => over(lensProp('attributes'), mergeReverse(payload), resourceObject)
+export const relationshipData = curry(
+    (relationshipName: string, resourceObject: JsonApi.ResourceObject) =>
+        path(['relationships', relationshipName, 'data'], resourceObject)
 );
 
 /**

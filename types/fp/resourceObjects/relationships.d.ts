@@ -15,12 +15,12 @@ export declare const relationships: (resourceObject: JsonApi.ResourceObject) => 
  */
 export declare const relationship: CurriedFunction2<string, JsonApi.ResourceObject, boolean | undefined>;
 /**
- * Update the attributes of the Resource Object
+ * Return a single Relationship value
  *
- * @param payload
+ * @param relationshipName
  * @param resourceObject
  */
-export declare const updateAttributes: CurriedFunction2<JsonApi.Attributes | undefined, JsonApi.ResourceObject, JsonApi.ResourceObject>;
+export declare const relationshipData: CurriedFunction2<string, JsonApi.ResourceObject, boolean | undefined>;
 /**
  * Add a relationship to the Resource Object by type and id
  *

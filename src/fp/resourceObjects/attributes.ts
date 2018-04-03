@@ -3,8 +3,10 @@
  */
 
 import {
-    assoc,
+    assocPath,
     curry,
+    lensProp,
+    over,
     path,
     pathOr,
     prop,
@@ -13,6 +15,7 @@ import {
 } from 'ramda';
 
 import * as JsonApi from '../../structure';
+import { mergeReverse } from '../../utils';
 
 /**
  * Return all attributes.
@@ -30,7 +33,7 @@ export const attributes = (resourceObject: JsonApi.ResourceObject) =>
  */
 export const attribute = curry(
     (attributeName: string, resourceObject: JsonApi.ResourceObject) =>
-        path(['attributes', name], resourceObject)
+        path(['attributes', attributeName], resourceObject)
 );
 
 /**
@@ -56,8 +59,21 @@ export const attributeOr = curry(
  */
 export const setAttribute = curry(
     (
-        value: any,
         attributeName: string,
+        value: any,
         resourceObject: JsonApi.ResourceObject
-    ) => assoc(value, attributeName, resourceObject)
+    ) => assocPath(['attributes', attributeName], value, resourceObject)
+);
+
+/**
+ * Update the attributes of the Resource Object
+ *
+ * @param payload
+ * @param resourceObject
+ */
+export const updateAttributes = curry(
+    (
+        payload: JsonApi.Attributes = {},
+        resourceObject: JsonApi.ResourceObject
+    ) => over(lensProp('attributes'), mergeReverse(payload), resourceObject)
 );

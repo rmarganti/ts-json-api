@@ -31,4 +31,11 @@ export declare const attributeOr: CurriedFunction3<any, string, JsonApi.Resource
  * @param attributeName
  * @param resourceObject
  */
-export declare const setAttribute: CurriedFunction3<any, string, JsonApi.ResourceObject, Record<any, string> & JsonApi.ResourceObject>;
+export declare const setAttribute: CurriedFunction3<string, any, JsonApi.ResourceObject, JsonApi.ResourceObject>;
+/**
+ * Update the attributes of the Resource Object
+ *
+ * @param payload
+ * @param resourceObject
+ */
+export declare const updateAttributes: CurriedFunction2<JsonApi.Attributes | undefined, JsonApi.ResourceObject, JsonApi.ResourceObject>;
