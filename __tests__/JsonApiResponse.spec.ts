@@ -3,13 +3,24 @@ import { lensPath, map, set } from 'ramda';
 
 import ResourceObject from '../src/ResourceObject';
 import JsonApiResponse from '../src/JsonApiResponse';
-const mockResponse = require('./mocks/JsonApiResponse.json');
+import * as JsonApi from '../src/structure';
+
+const itemResponse: Article = require('./mocks/itemResponse.json');
+
+interface Article extends JsonApi.ResourceObject {
+    type: 'articles';
+    attributes: {
+        title: string;
+    };
+}
+
+type ArticleItemResponse = JsonApi.Response<Article>;
 
 describe('JsonApiResponse', () => {
-    let jsonApiResponse: JsonApiResponse;
+    let jsonApiResponse: JsonApiResponse<ArticleItemResponse>;
 
     beforeEach(() => {
-        jsonApiResponse = JsonApiResponse.of(mockResponse);
+        jsonApiResponse = JsonApiResponse.of(itemResponse);
     });
 
     it('builds a new JsonApiResponse', () => {
@@ -22,9 +33,7 @@ describe('JsonApiResponse', () => {
     });
 
     it('expands a relationship to the full include', () => {
-        const author = (<ResourceObject>jsonApiResponse.data()).relationship(
-            'author'
-        );
+        const author = jsonApiResponse.data().relationship('author');
         const expandedAuthor = jsonApiResponse.expandInclude(author);
 
         expect(expandedAuthor.attribute('first-name')).toEqual('Dan');
@@ -33,7 +42,7 @@ describe('JsonApiResponse', () => {
     it('can be mapped over', () => {
         const changeTypeToBooks = set(lensPath(['data', 'type']), 'books');
 
-        const result: JsonApiResponse = map(changeTypeToBooks, jsonApiResponse);
-        expect((<ResourceObject>result.data()).type()).toEqual('books');
+        const result = jsonApiResponse.map(changeTypeToBooks);
+        expect(result.data().type()).toEqual('books');
     });
 });

@@ -1,23 +1,23 @@
 import { clone, path, pipe, prop, propOr } from 'ramda';
 
-import * as JsonApi from './Structure';
+import * as JsonApi from './structure';
 import ApiError from './ApiError';
 import ResourceObject from './ResourceObject';
 import { convertToResourceObjectOrResourceObjects } from './utils';
 
-class JsonApiResponse {
-    private response: JsonApi.iResponse;
+class JsonApiResponse<D extends JsonApi.Response = JsonApi.Response> {
+    private response: D;
 
-    constructor(response: JsonApi.iResponse) {
+    constructor(response: D) {
         this.response = response;
         Object.freeze(this);
     }
 
-    static of(response: JsonApi.iResponse): JsonApiResponse {
+    static of<S extends JsonApi.Response>(response: S): JsonApiResponse<S> {
         return new JsonApiResponse(response);
     }
 
-    map(f: (x: JsonApi.iResponse) => JsonApi.iResponse): JsonApiResponse {
+    map(f: (x: D) => D): JsonApiResponse<D> {
         return JsonApiResponse.of(f(this.response));
     }
 
@@ -25,36 +25,32 @@ class JsonApiResponse {
      * Retrieve the data from the response
      * as an ResourceObject or array of ResourceObjects
      */
-    data(): ResourceObject | ResourceObject[] {
-        return pipe(
-            propOr(undefined, 'data'),
-            convertToResourceObjectOrResourceObjects
-        )(this.response);
+    data() {
+        return convertToResourceObjectOrResourceObjects(this.response.data);
     }
 
     /**
      * Retrieve all errors as an array of ApiErrors
      */
     errors(): ApiError[] {
-        const errors: JsonApi.iError[] = propOr([], 'errors', this.response);
+        const errors: JsonApi.Error[] = this.response.errors || [];
         return errors.map(ApiError.of);
     }
 
     /**
      * Does the JsonApi response have an error?
      */
-    hasError() {
+    hasError(): boolean {
         return this.errors().length > 0;
     }
 
     /**
      * Retrieves all includes an array of ResourceObjects
      */
-    included() {
-        return pipe(
-            propOr([], 'included'),
-            convertToResourceObjectOrResourceObjects
-        )(this.response);
+    included(): ResourceObject[] {
+        return convertToResourceObjectOrResourceObjects(
+            this.response.included || []
+        );
     }
 
     /**
@@ -76,17 +72,17 @@ class JsonApiResponse {
     }
 
     meta(name: string) {
-        const metaFinder: (
-            response: JsonApi.iResponseWithMetaData
-        ) => any = name ? path(['meta', name]) : prop('meta');
+        const metaFinder: (response: JsonApi.ResponseWithMetaData) => any = name
+            ? path(['meta', name])
+            : prop('meta');
 
-        return metaFinder(this.response as JsonApi.iResponseWithMetaData);
+        return metaFinder(this.response as JsonApi.ResponseWithMetaData);
     }
 
     /**
      * Map to the original JSON object
      */
-    toJSON() {
+    toJSON(): D {
         return clone(this.response);
     }
 }

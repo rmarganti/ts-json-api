@@ -1,8 +1,8 @@
-import * as JsonApi from './Structure';
+import * as JsonApi from './structure';
 declare class ApiError {
     private error;
-    constructor(error: JsonApi.iError);
-    static of(error: JsonApi.iError): ApiError;
-    map(f: (x: JsonApi.iError) => JsonApi.iError): ApiError;
+    constructor(error: JsonApi.Error);
+    static of(error: JsonApi.Error): ApiError;
+    map(f: (x: JsonApi.Error) => JsonApi.Error): ApiError;
 }
 export default ApiError;

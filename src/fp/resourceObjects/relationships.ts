@@ -1,11 +1,10 @@
 import {
     append,
     curry,
+    path,
     lensPath,
     lensProp,
     over,
-    path,
-    prop,
     propOr,
     reject,
     set,
@@ -14,38 +13,15 @@ import {
     CurriedFunction4,
 } from 'ramda';
 
-import { hasGivenId, mergeReverse } from './utils';
-import * as JsonApi from './Structure';
-import { iResourceObject } from './index';
-
-export const type = prop('type');
-export const id = prop('id');
-
-/**
- * Return all attributes
- *
- * @param resourceObject
- */
-export const attributes = (resourceObject: iResourceObject) =>
-    prop('attributes', resourceObject);
-
-/**
- * Return a single Attribute value
- *
- * @param attributeName
- * @param resourceObject
- */
-export const attribute = curry(
-    (attributeName: string, resourceObject: iResourceObject) =>
-        path(['attributes', name], resourceObject)
-);
+import * as JsonApi from '../../structure';
+import { mergeReverse, hasGivenId } from '../../utils';
 
 /**
  * Return all relationships
  *
  * @param resourceObject
  */
-export const relationships = (resourceObject: iResourceObject) =>
+export const relationships = (resourceObject: JsonApi.ResourceObject) =>
     propOr({}, 'relationships', resourceObject);
 
 /**
@@ -55,7 +31,7 @@ export const relationships = (resourceObject: iResourceObject) =>
  * @param resourceObject
  */
 export const relationship = curry(
-    (relationshipName: string, resourceObject: iResourceObject) =>
+    (relationshipName: string, resourceObject: JsonApi.ResourceObject) =>
         path(['relationships', name, 'data'], resourceObject)
 );
 
@@ -66,8 +42,10 @@ export const relationship = curry(
  * @param resourceObject
  */
 export const updateAttributes = curry(
-    (payload: JsonApi.iAttributes = {}, resourceObject: iResourceObject) =>
-        over(lensProp('attributes'), mergeReverse(payload), resourceObject)
+    (
+        payload: JsonApi.Attributes = {},
+        resourceObject: JsonApi.ResourceObject
+    ) => over(lensProp('attributes'), mergeReverse(payload), resourceObject)
 );
 
 /**
@@ -83,7 +61,7 @@ export const addRelationship = curry(
         relationshipName: string,
         type: string,
         id: string,
-        resourceObject: iResourceObject
+        resourceObject: JsonApi.ResourceObject
     ) =>
         over(
             lensPath(['relationships', relationshipName, 'data']),
@@ -100,7 +78,7 @@ export const addRelationship = curry(
  * @param resourceObject
  */
 export const removeRelationship = curry(
-    (type: string, id: string, resourceObject: iResourceObject) =>
+    (type: string, id: string, resourceObject: JsonApi.ResourceObject) =>
         over(
             lensPath(['relationships', type, 'data']),
             reject(hasGivenId(id)),
@@ -121,7 +99,7 @@ export const setRelationship = curry(
         relationship: string,
         type: string,
         id: string,
-        resourceObject: iResourceObject
+        resourceObject: JsonApi.ResourceObject
     ) =>
         set(
             lensPath(['relationships', relationship, 'data']),

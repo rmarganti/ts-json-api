@@ -1,6 +1,6 @@
 import { flip, ifElse, map, merge, propEq } from 'ramda';
 
-import * as JsonApi from './Structure';
+import * as JsonApi from './structure';
 import ResourceObject from './ResourceObject';
 
 /**
@@ -9,7 +9,7 @@ import ResourceObject from './ResourceObject';
  * @param resourceObject
  */
 export const convertToResourceObject = (
-    resourceObject: JsonApi.iResourceObject
+    resourceObject: JsonApi.ResourceObject
 ) => new ResourceObject(resourceObject);
 
 /**

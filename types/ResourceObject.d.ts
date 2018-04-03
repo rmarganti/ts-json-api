@@ -1,20 +1,20 @@
-import * as JsonApi from './Structure';
-declare class ResourceObject {
+import * as JsonApi from './structure';
+declare class ResourceObject<D extends JsonApi.ResourceObject = JsonApi.ResourceObject> {
     private data;
-    constructor(resourceObject: JsonApi.iResourceObject);
+    constructor(resourceObject: D);
     /**
      * Static helper to build a new ResourceObject
      *
      * @param resourceObject
      */
-    static of(resourceObject: JsonApi.iResourceObject): ResourceObject;
+    static of<S extends JsonApi.ResourceObject = JsonApi.ResourceObject>(resourceObject: S): ResourceObject<S>;
     /**
      * Apply the supplied function to the internal data and
      * return a new ResourceObject containing the result.
      *
      * @param f A function that accepts a iResource object and returns another
      */
-    map(f: (x: JsonApi.iResourceObject) => JsonApi.iResourceObject): ResourceObject;
+    map(f: (x: D) => D): ResourceObject<D>;
     /**
      * Build a new ResourceObject of the given type and attributes
      * (optionally providing and id)
@@ -23,7 +23,11 @@ declare class ResourceObject {
      * @param attributes
      * @param id
      */
-    static build(type: string, attributes: JsonApi.iAttributes, id?: string): ResourceObject;
+    static build(type: string, attributes: JsonApi.Attributes, id?: string): ResourceObject<{
+        type: string;
+        id: string | undefined;
+        attributes: JsonApi.Attributes;
+    }>;
     /**
      * Return the type
      *
@@ -37,15 +41,15 @@ declare class ResourceObject {
      */
     id(): string | undefined;
     /**
-     * Return all iAttributes
+     * Return all Attributes
      */
-    attributes(): JsonApi.iAttributes;
+    attributes(): JsonApi.Attributes;
     /**
      * Return a single Attribute value
      *
      * @param name
      */
-    attribute(name: string): {};
+    attribute(name: string): {} | undefined;
     /**
      * Return all iRelationships
      *
@@ -64,7 +68,7 @@ declare class ResourceObject {
      *
      * @param payload
      */
-    update(payload?: JsonApi.iAttributes): ResourceObject;
+    update(payload?: JsonApi.Attributes): ResourceObject<D>;
     /**
      * Add a relationship to the ResourceObject by type and id
      *
@@ -79,7 +83,7 @@ declare class ResourceObject {
      * @param type
      * @param id
      */
-    removeRelationship(type: string, id: string): ResourceObject;
+    removeRelationship(type: string, id: string): ResourceObject<D>;
     /**
      * Set a to-one relationship to the given type and id
      *
@@ -87,13 +91,13 @@ declare class ResourceObject {
      * @param typeOrResourceObject
      * @param id
      */
-    setRelationship(relationship: string, typeOrResourceObject: string | ResourceObject, id?: string): ResourceObject;
+    setRelationship(relationship: string, typeOrResourceObject: string | ResourceObject, id?: string): ResourceObject<D>;
     /**
      * Returns the ResourceObject with the relationships stripped
      *
      * @return ResourceObject
      */
-    withoutRelationships(): ResourceObject;
+    withoutRelationships(): ResourceObject<D>;
     /**
      * Output ResourceObject as a JSON-serializable object
      *

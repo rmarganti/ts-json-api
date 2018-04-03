@@ -28,7 +28,7 @@ This represents a single ResourceObject in a JSONAPI response. The `data` attrib
 
 ### Other interfaces
 
-Due to JSONAPI's nested structure, it is constructed of a decent number of individual pieces. We recommend taking a look at `src/Structure.ts` for reference. Should you need to target more specific pieces of a response, it should be pretty self-explanitory.
+Due to JSONAPI's nested structure, it is constructed of a decent number of individual pieces. We recommend taking a look at `src/structure.ts` for reference. Should you need to target more specific pieces of a response, it should be pretty self-explanitory.
 
 ## The `ResourceObject` class
 

@@ -1,39 +1,43 @@
-export interface iAttributes {
+export interface Attributes {
     [index: string]: string | number | boolean | object;
 }
 
-export interface iRelationships {
+export interface Relationships {
     [index: string]: {
-        data: iResourceObject | iResourceObject[];
-        links?: iLinks;
-        meta?: iMeta;
+        data: ResourceObject | ResourceObject[];
+        links?: Links;
+        meta?: Meta;
     };
 }
 
-export interface iLinkObject {
+export interface LinkObject {
     href: string;
-    meta: iMeta;
+    meta: Meta;
 }
 
-export interface iLinks {
-    [index: string]: string | iLinkObject;
+export interface Links {
+    [index: string]: string | LinkObject;
 }
 
-export interface iMeta {
+export interface Meta {
     [index: string]: any;
 }
 
-export interface iResourceObject<T = string, A = iAttributes> {
-    type: T;
+export type ResourceObject = {
+    type: string;
     id?: string;
-    attributes?: A;
-    relationships?: iRelationships;
-    links?: iLinks;
-}
+    attributes?: Attributes;
+    relationships?: Relationships;
+    links?: Links;
+};
 
-export interface iError {
+export type ResourceObjects = ResourceObject[];
+
+export type ResourceObjectOrObjects = ResourceObject | ResourceObjects;
+
+export interface Error {
     id?: string;
-    links?: iLinks;
+    links?: Links;
     status?: string;
     code?: string;
     title?: string;
@@ -42,37 +46,47 @@ export interface iError {
         pointer?: string;
         parameter?: string;
     };
-    meta?: iMeta;
+    meta?: Meta;
 }
 
-export interface iResponseWithData {
-    data: iResourceObject | iResourceObject[];
-    included?: iResourceObject[];
-    links?: iLinks;
-    errors?: [iError];
-    meta?: iMeta;
+export interface ResponseWithData<
+    D extends ResourceObjectOrObjects = ResourceObjectOrObjects
+> {
+    data: D;
+    included?: ResourceObject[];
+    links?: Links;
+    errors?: [Error];
+    meta?: Meta;
 }
 
-export interface iResponseWithErrors {
-    data?: iResourceObject | iResourceObject[];
-    included?: iResourceObject[];
-    links?: iLinks;
-    errors: [iError];
-    meta?: iMeta;
-}
-
-export interface iResponseWithMetaData {
-    data?: iResourceObject | iResourceObject[];
-    included?: iResourceObject[];
-    links?: iLinks;
-    errors?: [iError];
-    meta: iMeta;
-}
-
-export interface iResponse<D = iResourceObject | iResourceObject[]> {
+export interface ResponseWithErrors<
+    D extends ResourceObjectOrObjects = ResourceObjectOrObjects
+> {
     data?: D;
-    included?: iResourceObject[];
-    links?: iLinks;
-    errors?: [iError];
-    meta?: iMeta;
+    included?: ResourceObject[];
+    links?: Links;
+    errors: [Error];
+    meta?: Meta;
 }
+
+export interface ResponseWithMetaData<
+    D extends ResourceObjectOrObjects = ResourceObjectOrObjects
+> {
+    data?: D;
+    included?: ResourceObject[];
+    links?: Links;
+    errors?: [Error];
+    meta: Meta;
+}
+
+export interface Response<
+    D extends ResourceObjectOrObjects = ResourceObjectOrObjects
+> {
+    data?: D;
+    included?: ResourceObject[];
+    links?: Links;
+    errors?: [Error];
+    meta?: Meta;
+}
+
+export interface Request extends Response {}

@@ -2,7 +2,7 @@ import 'jest';
 import { clone, lensPath, map, set } from 'ramda';
 
 import ResourceObject from '../src/ResourceObject';
-const mockResponse = require('./mocks/JsonApiResponse.json');
+const mockResponse = require('./mocks/itemResponse.json');
 
 describe('ResourceObject', () => {
     let entity: ResourceObject;
@@ -20,26 +20,14 @@ describe('ResourceObject', () => {
             'comments',
         ]);
 
-        expect((<ResourceObject>entity.relationship('author')).id()).toEqual(
-            '9'
-        );
-        expect((<ResourceObject>entity.relationship('author')).type()).toEqual(
-            'people'
-        );
+        expect(entity.relationship('author').id()).toEqual('9');
+        expect(entity.relationship('author').type()).toEqual('people');
 
-        expect(
-            (<ResourceObject[]>entity.relationship('comments'))[0].id()
-        ).toEqual('5');
-        expect(
-            (<ResourceObject[]>entity.relationship('comments'))[0].type()
-        ).toEqual('comments');
+        expect(entity.relationship('comments')[0].id()).toEqual('5');
+        expect(entity.relationship('comments')[0].type()).toEqual('comments');
 
-        expect(
-            (<ResourceObject[]>entity.relationship('comments'))[1].id()
-        ).toEqual('12');
-        expect(
-            (<ResourceObject[]>entity.relationship('comments'))[1].type()
-        ).toEqual('comments');
+        expect(entity.relationship('comments')[1].id()).toEqual('12');
+        expect(entity.relationship('comments')[1].type()).toEqual('comments');
     });
 
     it("updated an ResourceObject's attributes immutably", () => {
@@ -62,15 +50,11 @@ describe('ResourceObject', () => {
         const result = entity.addRelationship('comments', 'comments', '4444');
 
         expect(
-            (<ResourceObject[]>entity.relationship('comments')).map(comment =>
-                comment.id()
-            )
+            entity.relationship('comments').map(comment => comment.id())
         ).toEqual(['5', '12']);
 
         expect(
-            (<ResourceObject[]>result.relationship('comments')).map(comment =>
-                comment.id()
-            )
+            result.relationship('comments').map(comment => comment.id())
         ).toEqual(['5', '12', '4444']);
     });
 
@@ -86,15 +70,11 @@ describe('ResourceObject', () => {
         );
 
         expect(
-            (<ResourceObject[]>entity.relationship('comments')).map(comment =>
-                comment.id()
-            )
+            entity.relationship('comments').map(comment => comment.id())
         ).toEqual(['5', '12']);
 
         expect(
-            (<ResourceObject[]>result.relationship('comments')).map(comment =>
-                comment.id()
-            )
+            result.relationship('comments').map(comment => comment.id())
         ).toEqual(['5', '12', '4242']);
     });
 
@@ -102,15 +82,11 @@ describe('ResourceObject', () => {
         const result = entity.removeRelationship('comments', '5');
 
         expect(
-            (<ResourceObject[]>entity.relationship('comments')).map(comment =>
-                comment.id()
-            )
+            entity.relationship('comments').map(comment => comment.id())
         ).toEqual(['5', '12']);
 
         expect(
-            (<ResourceObject[]>result.relationship('comments')).map(comment =>
-                comment.id()
-            )
+            result.relationship('comments').map(comment => comment.id())
         ).toEqual(['12']);
     });
 
@@ -183,7 +159,7 @@ describe('ResourceObject', () => {
             'BeesKnees'
         );
 
-        const result = map(changeTitleToBeesKnees, entity);
+        const result = entity.map(changeTitleToBeesKnees);
         expect(result.attribute('title')).toEqual('BeesKnees');
     });
 });

@@ -20,7 +20,7 @@ import {
     set,
 } from 'ramda';
 
-import * as JsonApi from './Structure';
+import * as JsonApi from './structure';
 
 import {
     convertToResourceObjectOrResourceObjects,
@@ -28,10 +28,12 @@ import {
     mergeReverse,
 } from './utils';
 
-class ResourceObject {
-    private data: JsonApi.iResourceObject;
+class ResourceObject<
+    D extends JsonApi.ResourceObject = JsonApi.ResourceObject
+> {
+    private data: D;
 
-    constructor(resourceObject: JsonApi.iResourceObject) {
+    constructor(resourceObject: D) {
         this.data = resourceObject;
         Object.freeze(this);
     }
@@ -41,7 +43,9 @@ class ResourceObject {
      *
      * @param resourceObject
      */
-    static of(resourceObject: JsonApi.iResourceObject) {
+    static of<S extends JsonApi.ResourceObject = JsonApi.ResourceObject>(
+        resourceObject: S
+    ) {
         return new ResourceObject(resourceObject);
     }
 
@@ -51,7 +55,7 @@ class ResourceObject {
      *
      * @param f A function that accepts a iResource object and returns another
      */
-    map(f: (x: JsonApi.iResourceObject) => JsonApi.iResourceObject) {
+    map(f: (x: D) => D) {
         return ResourceObject.of(f(this.data));
     }
 
@@ -63,7 +67,7 @@ class ResourceObject {
      * @param attributes
      * @param id
      */
-    static build(type: string, attributes: JsonApi.iAttributes, id?: string) {
+    static build(type: string, attributes: JsonApi.Attributes, id?: string) {
         return new ResourceObject({
             type,
             id,
@@ -90,9 +94,9 @@ class ResourceObject {
     }
 
     /**
-     * Return all iAttributes
+     * Return all Attributes
      */
-    attributes(): JsonApi.iAttributes {
+    attributes(): JsonApi.Attributes {
         return prop('attributes', this.data as Record<any, any>);
     }
 
@@ -144,7 +148,7 @@ class ResourceObject {
      *
      * @param payload
      */
-    update(payload: JsonApi.iAttributes = {}) {
+    update(payload: JsonApi.Attributes = {}) {
         const updateAttributes = over(
             lensProp('attributes'),
             mergeReverse(payload)

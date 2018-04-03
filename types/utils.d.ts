@@ -1,12 +1,12 @@
 /// <reference types="ramda" />
-import * as JsonApi from './Structure';
+import * as JsonApi from './structure';
 import ResourceObject from './ResourceObject';
 /**
  * Converts a Resource Object to an ResourceObject
  *
  * @param resourceObject
  */
-export declare const convertToResourceObject: (resourceObject: JsonApi.iResourceObject<string, JsonApi.iAttributes>) => ResourceObject;
+export declare const convertToResourceObject: (resourceObject: JsonApi.ResourceObject) => ResourceObject<JsonApi.ResourceObject>;
 /**
  * If an Array is provided, it is converted to an Array of ResourceObjects.
  * If a single item is provided, it is converted to an ResourceObject
@@ -23,7 +23,7 @@ export declare const isDefined: (item: any) => boolean;
  * useful for merging small data sets into larger
  * data collections
  */
-export declare const mergeReverse: (arg1: {}, arg0?: any) => <T2>(b: T2) => any;
+export declare const mergeReverse: (arg1: {}, arg0?: {} | undefined) => <T2>(b: T2) => T2 & {};
 /**
  * Determines if the provided Resource Object has the given ID
  *
