@@ -1,12 +1,13 @@
 export interface Attributes {
     [index: string]: string | number | boolean | object;
 }
+export interface Relationship<D extends SimplifiedResourceObjectOrObjects = SimplifiedResourceObjectOrObjects> {
+    data: D;
+    links?: Links;
+    meta?: Meta;
+}
 export interface Relationships {
-    [index: string]: {
-        data: ResourceObject | ResourceObject[];
-        links?: Links;
-        meta?: Meta;
-    };
+    [index: string]: Relationship;
 }
 export interface LinkObject {
     href: string;
@@ -27,6 +28,9 @@ export declare type ResourceObject = {
 };
 export declare type ResourceObjects = ResourceObject[];
 export declare type ResourceObjectOrObjects = ResourceObject | ResourceObjects;
+export declare type SimplifiedResourceObject = Pick<ResourceObject, 'type' | 'id'>;
+export declare type SimplifiedResourceObjects = SimplifiedResourceObject[];
+export declare type SimplifiedResourceObjectOrObjects = SimplifiedResourceObject | SimplifiedResourceObjects;
 export interface Error {
     id?: string;
     links?: Links;

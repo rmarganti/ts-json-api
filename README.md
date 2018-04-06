@@ -12,7 +12,7 @@ This is the main interface. It works with any acceptable combination of `Respons
 
 ### ResponseWithData
 
-Use this if you know that the data is a valid JSONAPI response with data. This requires a `data` property (with either a `ResourceObject` or array of `ResourceObject`'s). It may or may not also have includes (`included`) and `links`.
+Use this if you know that the data is a valid JSONAPI response with data. This requires a `data` property (with either a `ResourceObject` or array of `ResourceObject`'s). It may or may not also have includes `included` and `links`.
 
 ### ResponseWithErrors
 
@@ -20,7 +20,7 @@ If your response contains an error, you can target with this interface.
 
 ### ResponseWithmeta
 
-If your response contains only meta data (not super common), this interface can be help
+If your response contains only meta data (not super common), this interface can be a help.
 
 ### ResourceObject
 
@@ -29,6 +29,42 @@ This represents a single ResourceObject in a JSONAPI response. The `data` attrib
 ### Other interfaces
 
 Due to JSONAPI's nested structure, it is constructed of a decent number of individual pieces. We recommend taking a look at `src/structure.ts` for reference. Should you need to target more specific pieces of a response, it should be pretty self-explanitory.
+
+### Example Interface usage
+
+```js
+import * as JsonApi from 'ts-json-api';
+
+export interface Article extends JsonApi.ResourceObject {
+    type: 'articles';
+    attributes: {
+        title: string;
+    };
+    relationships: {
+        author: JsonApi.Relationship<Person>;
+        comments: JsonApi.Relationship<Comment[]>;
+    };
+}
+
+export type ArticleItemResponse = JsonApi.Response<Article>;
+export type ArticleCollectionResponse = JsonApi.Response<Article[]>;
+
+export interface Person extends JsonApi.ResourceObject {
+    type: 'people';
+    attributes: {
+        'first-name': string;
+        'last-name': string;
+        twitter: string;
+    };
+}
+
+export interface Comment extends JsonApi.ResourceObject {
+    type: 'comments';
+    attributes: {
+        body: string;
+    };
+}
+```
 
 ## The `ResourceObject` class
 
