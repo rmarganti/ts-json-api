@@ -29,7 +29,7 @@ declare class JsonApiResponse<D extends JsonApi.Response = JsonApi.Response> {
      *
      * @param entity An partial ResourceObject with only `id` and `type` fields
      */
-    expandInclude(entity: ResourceObject): ResourceObject<JsonApi.ResourceObject> | undefined;
+    expandInclude(entity: ResourceObject): ResourceObject<JsonApi.NewResourceObject> | undefined;
     meta(name: string): any;
     /**
      * Map to the original JSON object

@@ -1,5 +1,5 @@
 import * as JsonApi from './structure';
-declare class ResourceObject<D extends JsonApi.ResourceObject = JsonApi.ResourceObject> {
+declare class ResourceObject<D extends JsonApi.NewResourceObject = JsonApi.NewResourceObject> {
     private data;
     constructor(resourceObject: D);
     /**
@@ -7,7 +7,7 @@ declare class ResourceObject<D extends JsonApi.ResourceObject = JsonApi.Resource
      *
      * @param resourceObject
      */
-    static of<S extends JsonApi.ResourceObject = JsonApi.ResourceObject>(resourceObject: S): ResourceObject<S>;
+    static of<S extends JsonApi.NewResourceObject = JsonApi.NewResourceObject>(resourceObject: S): ResourceObject<S>;
     /**
      * Apply the supplied function to the internal data and
      * return a new ResourceObject containing the result.

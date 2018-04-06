@@ -29,7 +29,7 @@ import {
 } from './utils';
 
 class ResourceObject<
-    D extends JsonApi.ResourceObject = JsonApi.ResourceObject
+    D extends JsonApi.NewResourceObject = JsonApi.NewResourceObject
 > {
     private data: D;
 
@@ -43,7 +43,7 @@ class ResourceObject<
      *
      * @param resourceObject
      */
-    static of<S extends JsonApi.ResourceObject = JsonApi.ResourceObject>(
+    static of<S extends JsonApi.NewResourceObject = JsonApi.NewResourceObject>(
         resourceObject: S
     ) {
         return new ResourceObject(resourceObject);

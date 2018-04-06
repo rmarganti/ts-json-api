@@ -1,33 +1,79 @@
+/**
+ * Attributes describing a Resource Object
+ */
 export interface Attributes {
     [index: string]: string | number | boolean | object;
 }
 
+/**
+ * Describes a single Relationship type between a
+ * Resource Object and one or more other Resource Objects.
+ */
 export interface Relationship<
-    D extends SimplifiedResourceObjectOrObjects = SimplifiedResourceObjectOrObjects
+    D extends ResourceObjectOrObjects = ResourceObjectOrObjects
 > {
-    data: D;
+    data: D extends ResourceObject ? Pick<D, 'type' | 'id'> : D;
     links?: Links;
     meta?: Meta;
 }
 
+/**
+ * A Resource object's Relationships.
+ */
 export interface Relationships {
     [index: string]: Relationship;
 }
 
+/**
+ * A Link.
+ */
 export interface LinkObject {
     href: string;
     meta: Meta;
 }
 
+/**
+ * An index of Links.
+ */
 export interface Links {
     [index: string]: string | LinkObject;
 }
 
+/**
+ * An index of Meta data.
+ */
 export interface Meta {
     [index: string]: any;
 }
 
+/**
+ * A representation of a single resource.
+ */
 export type ResourceObject = {
+    type: string;
+    id: string;
+    attributes?: Attributes;
+    relationships?: Relationships;
+    links?: Links;
+};
+
+/**
+ * An array of Resource Objects.
+ */
+export type ResourceObjects = ResourceObject[];
+
+/**
+ * Either or a single Resource Object or an array of Resource Objects.
+ */
+export type ResourceObjectOrObjects = ResourceObject | ResourceObjects;
+
+/**
+ * A representation of a new Resource Object that
+ * originates at the client and is yet to be created
+ * on the server. The main difference between a regular
+ * Resource Object is that this may not have an `id` yet.
+ */
+export type NewResourceObject = {
     type: string;
     id?: string;
     attributes?: Attributes;
@@ -35,18 +81,9 @@ export type ResourceObject = {
     links?: Links;
 };
 
-export type ResourceObjects = ResourceObject[];
-
-export type ResourceObjectOrObjects = ResourceObject | ResourceObjects;
-
-export type SimplifiedResourceObject = Pick<ResourceObject, 'type' | 'id'>;
-
-export type SimplifiedResourceObjects = SimplifiedResourceObject[];
-
-export type SimplifiedResourceObjectOrObjects =
-    | SimplifiedResourceObject
-    | SimplifiedResourceObjects;
-
+/**
+ * An Error.
+ */
 export interface Error {
     id?: string;
     links?: Links;
@@ -61,6 +98,9 @@ export interface Error {
     meta?: Meta;
 }
 
+/**
+ * A Response for sure containing data.
+ */
 export interface ResponseWithData<
     D extends ResourceObjectOrObjects = ResourceObjectOrObjects
 > {
@@ -71,6 +111,9 @@ export interface ResponseWithData<
     meta?: Meta;
 }
 
+/**
+ * A Response for sure containing Errors.
+ */
 export interface ResponseWithErrors<
     D extends ResourceObjectOrObjects = ResourceObjectOrObjects
 > {
@@ -81,6 +124,9 @@ export interface ResponseWithErrors<
     meta?: Meta;
 }
 
+/**
+ * A Response for sure containing top-level Meta data.
+ */
 export interface ResponseWithMetaData<
     D extends ResourceObjectOrObjects = ResourceObjectOrObjects
 > {
@@ -91,6 +137,9 @@ export interface ResponseWithMetaData<
     meta: Meta;
 }
 
+/**
+ * A Response from a JSON API-compliant server.
+ */
 export interface Response<
     D extends ResourceObjectOrObjects = ResourceObjectOrObjects
 > {
@@ -101,4 +150,7 @@ export interface Response<
     meta?: Meta;
 }
 
+/**
+ * A Request to be sent to a JSON API-compliant server.
+ */
 export interface Request extends Response {}
