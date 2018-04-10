@@ -2,10 +2,10 @@ import { clone, path, pipe, prop, propOr } from 'ramda';
 
 import * as JsonApi from './structure';
 import ApiError from './ApiError';
-import ResourceObject from './ResourceObject';
-import { convertToResourceObjectOrResourceObjects } from './utils';
+import ApiResourceObject from './ApiResourceObject';
+import { convertToApiResourceObjectOrObjects } from './utils';
 
-class JsonApiResponse<D extends JsonApi.Response = JsonApi.Response> {
+class ApiResponse<D extends JsonApi.Response = JsonApi.Response> {
     private response: D;
 
     constructor(response: D) {
@@ -13,20 +13,20 @@ class JsonApiResponse<D extends JsonApi.Response = JsonApi.Response> {
         Object.freeze(this);
     }
 
-    static of<S extends JsonApi.Response>(response: S): JsonApiResponse<S> {
-        return new JsonApiResponse(response);
+    static of<S extends JsonApi.Response>(response: S): ApiResponse<S> {
+        return new ApiResponse(response);
     }
 
-    map(f: (x: D) => D): JsonApiResponse<D> {
-        return JsonApiResponse.of(f(this.response));
+    map(f: (x: D) => D): ApiResponse<D> {
+        return ApiResponse.of(f(this.response));
     }
 
     /**
      * Retrieve the data from the response
-     * as an ResourceObject or array of ResourceObjects
+     * as an ApiResourceObject or array of ApiResourceObjects
      */
     data() {
-        return convertToResourceObjectOrResourceObjects(this.response.data);
+        return convertToApiResourceObjectOrObjects(this.response.data);
     }
 
     /**
@@ -45,26 +45,26 @@ class JsonApiResponse<D extends JsonApi.Response = JsonApi.Response> {
     }
 
     /**
-     * Retrieves all includes an array of ResourceObjects
+     * Retrieves all includes an array of ApiResourceObjects
      */
-    included(): ResourceObject[] {
-        return convertToResourceObjectOrResourceObjects(
+    included(): ApiResourceObject[] {
+        return convertToApiResourceObjectOrObjects(
             this.response.included || []
         );
     }
 
     /**
-     * Expand a partial ResourceObject to the version in the includes. This is
+     * Expand a partial ApiResourceObject to the version in the includes. This is
      * useful for retrieving the full data from a relationships.
      *
-     * @param entity An partial ResourceObject with only `id` and `type` fields
+     * @param entity An partial ApiResourceObject with only `id` and `type` fields
      */
-    expandInclude(entity: ResourceObject) {
+    expandInclude(entity: ApiResourceObject) {
         if (this.included().length === 0) {
             return undefined;
         }
 
-        return this.included().find((include: ResourceObject) => {
+        return this.included().find((include: ApiResourceObject) => {
             return (
                 include.id() === entity.id() && include.type() === entity.type()
             );
@@ -87,4 +87,4 @@ class JsonApiResponse<D extends JsonApi.Response = JsonApi.Response> {
     }
 }
 
-export default JsonApiResponse;
+export default Response;

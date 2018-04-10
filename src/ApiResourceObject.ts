@@ -20,17 +20,15 @@ import {
     set,
 } from 'ramda';
 
-import * as JsonApi from './structure';
+import { Attributes, NewResourceObject } from './structure';
 
 import {
-    convertToResourceObjectOrResourceObjects,
+    convertToApiResourceObjectOrObjects,
     isDefined,
     mergeReverse,
 } from './utils';
 
-class ResourceObject<
-    D extends JsonApi.NewResourceObject = JsonApi.NewResourceObject
-> {
+class ApiResourceObject<D extends NewResourceObject = NewResourceObject> {
     private data: D;
 
     constructor(resourceObject: D) {
@@ -39,24 +37,24 @@ class ResourceObject<
     }
 
     /**
-     * Static helper to build a new ResourceObject
+     * Static helper to build a new ApiResourceObject
      *
      * @param resourceObject
      */
-    static of<S extends JsonApi.NewResourceObject = JsonApi.NewResourceObject>(
+    static of<S extends NewResourceObject = NewResourceObject>(
         resourceObject: S
     ) {
-        return new ResourceObject(resourceObject);
+        return new ApiResourceObject(resourceObject);
     }
 
     /**
      * Apply the supplied function to the internal data and
-     * return a new ResourceObject containing the result.
+     * return a new ApiResourceObject containing the result.
      *
      * @param f A function that accepts a iResource object and returns another
      */
     map(f: (x: D) => D) {
-        return ResourceObject.of(f(this.data));
+        return ApiResourceObject.of(f(this.data));
     }
 
     /**
@@ -67,8 +65,8 @@ class ResourceObject<
      * @param attributes
      * @param id
      */
-    static build(type: string, attributes: JsonApi.Attributes, id?: string) {
-        return new ResourceObject({
+    static build(type: string, attributes: Attributes, id?: string) {
+        return new ApiResourceObject({
             type,
             id,
             attributes,
@@ -81,23 +79,21 @@ class ResourceObject<
      * @return {String}
      */
     type(): string {
-        return prop('type', this.data as Record<any, any>);
+        return prop('type', this.data);
     }
 
     /**
      * Return the ID
-     *
-     * @return {String|undefined}
      */
     id(): string | undefined {
-        return prop('id', this.data as Record<any, any>);
+        return prop('id', this.data);
     }
 
     /**
      * Return all Attributes
      */
-    attributes(): JsonApi.Attributes {
-        return prop('attributes', this.data as Record<any, any>);
+    attributes() {
+        return prop('attributes', this.data);
     }
 
     /**
@@ -111,10 +107,8 @@ class ResourceObject<
 
     /**
      * Return all iRelationships
-     *
-     * @return {Object}
      */
-    relationships(): any {
+    relationships() {
         const relationships = propOr({}, 'relationships', this.data);
 
         return Object.keys(relationships).reduce(
@@ -129,15 +123,14 @@ class ResourceObject<
     /**
      * Return a single Relationship value
      *
-     * @param  name
-     * @return ResourceObject|ResourceObject[]
+     * @param name
      */
     relationship(name: string) {
         return pipe(
             path(['relationships', name, 'data']),
             ifElse(
                 isDefined,
-                convertToResourceObjectOrResourceObjects,
+                convertToApiResourceObjectOrObjects,
                 () => undefined
             )
         )(this.data);
@@ -148,7 +141,7 @@ class ResourceObject<
      *
      * @param payload
      */
-    update(payload: JsonApi.Attributes = {}) {
+    update(payload: Attributes = {}) {
         const updateAttributes = over(
             lensProp('attributes'),
             mergeReverse(payload)
@@ -166,18 +159,18 @@ class ResourceObject<
      */
     addRelationship(
         relationship: string,
-        typeOrResourceObject: string | ResourceObject,
+        typeOrResourceObject: string | ApiResourceObject,
         id?: string
-    ): ResourceObject {
+    ): ApiResourceObject {
         const addRelationship = over(
             lensPath(['relationships', relationship, 'data']),
             append({
                 type:
-                    typeOrResourceObject instanceof ResourceObject
+                    typeOrResourceObject instanceof ApiResourceObject
                         ? typeOrResourceObject.type()
                         : typeOrResourceObject,
                 id:
-                    typeOrResourceObject instanceof ResourceObject
+                    typeOrResourceObject instanceof ApiResourceObject
                         ? typeOrResourceObject.id()
                         : id,
             })
@@ -212,18 +205,18 @@ class ResourceObject<
      */
     setRelationship(
         relationship: string,
-        typeOrResourceObject: string | ResourceObject,
+        typeOrResourceObject: string | ApiResourceObject,
         id?: string
     ) {
         const setRelationship = set(
             lensPath(['relationships', relationship, 'data']),
             {
                 type:
-                    typeOrResourceObject instanceof ResourceObject
+                    typeOrResourceObject instanceof ApiResourceObject
                         ? typeOrResourceObject.type()
                         : typeOrResourceObject,
                 id:
-                    typeOrResourceObject instanceof ResourceObject
+                    typeOrResourceObject instanceof ApiResourceObject
                         ? typeOrResourceObject.id()
                         : id,
             }
@@ -255,4 +248,4 @@ class ResourceObject<
     }
 }
 
-export default ResourceObject;
+export default ApiResourceObject;

@@ -1,17 +1,18 @@
 import 'jest';
 import { clone, lensPath, map, set } from 'ramda';
 
-import ResourceObject from '../src/ResourceObject';
+import ApiResourceObject from '../src/ApiResourceObject';
+import { Article, ArticleItemResponse } from './mocks/types';
 const mockResponse = require('./mocks/itemResponse.json');
 
-describe('ResourceObject', () => {
-    let entity: ResourceObject;
+describe('ApiResourceObject', () => {
+    let entity: ApiResourceObject<Article>;
 
     beforeEach(() => {
-        entity = new ResourceObject(clone(mockResponse.data));
+        entity = new ApiResourceObject(clone(mockResponse.data));
     });
 
-    it('builds a new ResourceObject', () => {
+    it('builds a new ApiResourceObject', () => {
         expect(entity.attribute('title')).toEqual(
             'JSON API paints my bikeshed!'
         );
@@ -30,7 +31,7 @@ describe('ResourceObject', () => {
         expect(entity.relationship('comments')[1].type()).toEqual('comments');
     });
 
-    it("updated an ResourceObject's attributes immutably", () => {
+    it("updated an ApiResourceObject's attributes immutably", () => {
         const result = entity.update({
             title: 'New title',
             deleted: true,
@@ -58,15 +59,15 @@ describe('ResourceObject', () => {
         ).toEqual(['5', '12', '4444']);
     });
 
-    it('ads a another ResourceObject as a relationship', () => {
-        const relationshipResourceObject = ResourceObject.build(
+    it('ads a another ApiResourceObject as a relationship', () => {
+        const relationshipApiResourceObject = ApiResourceObject.build(
             'comments',
             { body: 'Inappropriate relationship' },
             '4242'
         );
         const result = entity.addRelationship(
             'comments',
-            relationshipResourceObject
+            relationshipApiResourceObject
         );
 
         expect(
@@ -99,8 +100,8 @@ describe('ResourceObject', () => {
         expect(entity.relationship('editor')).toBeUndefined;
     });
 
-    it('sets a relationship to another ResourceObject immutably', () => {
-        const relationshipResourceObject = ResourceObject.build(
+    it('sets a relationship to another ApiResourceObject immutably', () => {
+        const relationshipApiResourceObject = ApiResourceObject.build(
             'people',
             {},
             '4242'
@@ -108,7 +109,7 @@ describe('ResourceObject', () => {
 
         const result = entity.setRelationship(
             'editor',
-            relationshipResourceObject
+            relationshipApiResourceObject
         );
 
         expect(result.relationship('editor').id()).toEqual('4242');
@@ -117,8 +118,8 @@ describe('ResourceObject', () => {
         expect(entity.relationship('editor')).toBeUndefined;
     });
 
-    it('can build a new ResourceObject', () => {
-        const result = ResourceObject.build('emcee', {
+    it('can build a new ApiResourceObject', () => {
+        const result = ApiResourceObject.build('emcee', {
             name: 'SoulSauce',
             status: 'GOAT',
         });
@@ -131,7 +132,7 @@ describe('ResourceObject', () => {
         });
     });
 
-    it('returns the ResourceObject without the relationships', () => {
+    it('returns the ApiResourceObject without the relationships', () => {
         const result = entity.withoutRelationships();
         expect(entity.id()).toBeDefined;
         expect(entity.type()).toBeDefined;

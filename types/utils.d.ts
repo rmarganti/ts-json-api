@@ -1,17 +1,17 @@
 /// <reference types="ramda" />
 import * as JsonApi from './structure';
-import ResourceObject from './ResourceObject';
+import ApiResourceObject from './ApiResourceObject';
 /**
  * Converts a Resource Object to an ResourceObject
  *
  * @param resourceObject
  */
-export declare const convertToResourceObject: (resourceObject: JsonApi.ResourceObject) => ResourceObject<JsonApi.ResourceObject>;
+export declare const convertToApiResourceObject: (resourceObject: JsonApi.ResourceObject) => ApiResourceObject<JsonApi.ResourceObject>;
 /**
- * If an Array is provided, it is converted to an Array of ResourceObjects.
- * If a single item is provided, it is converted to an ResourceObject
+ * If an Array is provided, it is converted to an Array of ApiResourceObjects.
+ * If a single item is provided, it is converted to an ApiResourceObject
  */
-export declare const convertToResourceObjectOrResourceObjects: (a: any) => any;
+export declare const convertToApiResourceObjectOrObjects: (a: any) => any;
 /**
  * A predicate that determines if the provided value is defined
  *

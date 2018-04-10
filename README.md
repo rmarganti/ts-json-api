@@ -10,21 +10,11 @@ There library supports JSONAPI standard in all its variations. Therefore, there 
 
 This is the main interface. It works with any acceptable combination of `ResponseWithData`, `ResponseWithErrors`, & `ResponseWithMeta`. If you need to target specifc response types, it is recommend you use those more specific interfaces (covered below).
 
-### ResponseWithData
-
-Use this if you know that the data is a valid JSONAPI response with data. This requires a `data` property (with either a `ResourceObject` or array of `ResourceObject`'s). It may or may not also have includes `included` and `links`.
-
-### ResponseWithErrors
-
-If your response contains an error, you can target with this interface.
-
-### ResponseWithmeta
-
-If your response contains only meta data (not super common), this interface can be a help.
+See also: `ResponseWithData`, `ResponseWithErrors`, and `ResponseWithMeta`.
 
 ### ResourceObject
 
-This represents a single ResourceObject in a JSONAPI response. The `data` attribute in a JSONAPI response either a `ResourceObject` or an array of `ResourceObject`'s
+This represents a single ResourceObject in a JSONAPI response. See also: `ResourceObjects` and `ResourceObjectOrObjects`.
 
 ### Other interfaces
 
@@ -33,23 +23,23 @@ Due to JSONAPI's nested structure, it is constructed of a decent number of indiv
 ### Example Interface usage
 
 ```js
-import * as JsonApi from 'ts-json-api';
+import { Relationship, ResourceObject, Response } as JsonApi from 'ts-json-api';
 
-export interface Article extends JsonApi.ResourceObject {
+interface Article extends ResourceObject {
     type: 'articles';
     attributes: {
         title: string;
     };
     relationships: {
-        author: JsonApi.Relationship<Person>;
-        comments: JsonApi.Relationship<Comment[]>;
+        author: Relationship<Person>;
+        comments: Relationship<Comment[]>;
     };
 }
 
-export type ArticleItemResponse = JsonApi.Response<Article>;
-export type ArticleCollectionResponse = JsonApi.Response<Article[]>;
+type ArticleItemResponse = Response<Article>;
+type ArticleCollectionResponse = Response<Article[]>;
 
-export interface Person extends JsonApi.ResourceObject {
+interface Person extends ResourceObject {
     type: 'people';
     attributes: {
         'first-name': string;
@@ -58,7 +48,7 @@ export interface Person extends JsonApi.ResourceObject {
     };
 }
 
-export interface Comment extends JsonApi.ResourceObject {
+interface Comment extends ResourceObject {
     type: 'comments';
     attributes: {
         body: string;
@@ -66,14 +56,14 @@ export interface Comment extends JsonApi.ResourceObject {
 }
 ```
 
-## The `ResourceObject` class
+## The `ApiResourceObject` class
 
-`ts-json-api` provides an ResourceObject class that is helpful for acessing Resource Object data and updating it in an immutable way. All functions on the `ResourceObject` class will return a new `ResourceObject`, unaffecting the original.
+`ts-json-api` provides an ResourceObject class that is helpful for acessing Resource Object data and updating it in an immutable way. All functions on the `ApiResourceObject` class will return a new `ResourceObject`, unaffecting the original.
 
 ### Example Usage
 
 ```js
-import { ResourceObject } from 'ts-json-api';
+import { ApiResourceObject } from 'ts-json-api';
 
 const exampleInput = {
     "type": "articles",
@@ -106,7 +96,7 @@ const exampleInput = {
   }
 };
 
-const article = new ResourceObject(exampleInput);
+const article = new ApiResourceObject(exampleInput);
 
 console.log(article.type());
 // "articles"
@@ -171,3 +161,7 @@ article.toJSON()
 // Maybe your API call doesn't want to include relationship info
 article.withoutRelationships().toJSON()
 ```
+
+## Utility Functions
+
+This package exposes all of its useful utility functions. Documentation is coming, but feel free to browse around `src/fp`. All functions are curried for all you functional programming geeks.
