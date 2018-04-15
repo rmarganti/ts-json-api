@@ -1,3 +1,4 @@
+import { clone } from 'ramda';
 import * as JsonApi from './structure';
 
 class ApiError {
@@ -14,6 +15,10 @@ class ApiError {
 
     map(f: (x: JsonApi.Error) => JsonApi.Error) {
         return ApiError.of(f(this.error));
+    }
+
+    toJSON() {
+        return clone(this.error);
     }
 }
 
