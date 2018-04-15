@@ -1,5 +1,5 @@
-import * as JsonApi from './structure';
-declare class ApiResourceObject<D extends JsonApi.NewResourceObject = JsonApi.NewResourceObject> {
+import { Attributes, NewResourceObject } from './structure';
+declare class ApiResourceObject<D extends NewResourceObject = NewResourceObject> {
     private data;
     constructor(resourceObject: D);
     /**
@@ -7,7 +7,7 @@ declare class ApiResourceObject<D extends JsonApi.NewResourceObject = JsonApi.Ne
      *
      * @param resourceObject
      */
-    static of<S extends JsonApi.NewResourceObject = JsonApi.NewResourceObject>(resourceObject: S): ApiResourceObject<S>;
+    static of<S extends NewResourceObject = NewResourceObject>(resourceObject: S): ApiResourceObject<S>;
     /**
      * Apply the supplied function to the internal data and
      * return a new ApiResourceObject containing the result.
@@ -23,10 +23,10 @@ declare class ApiResourceObject<D extends JsonApi.NewResourceObject = JsonApi.Ne
      * @param attributes
      * @param id
      */
-    static build(type: string, attributes: JsonApi.Attributes, id?: string): ApiResourceObject<{
+    static build(type: string, attributes: Attributes, id?: string): ApiResourceObject<{
         type: string;
         id: string | undefined;
-        attributes: JsonApi.Attributes;
+        attributes: Attributes;
     }>;
     /**
      * Return the type
@@ -36,14 +36,12 @@ declare class ApiResourceObject<D extends JsonApi.NewResourceObject = JsonApi.Ne
     type(): string;
     /**
      * Return the ID
-     *
-     * @return {String|undefined}
      */
     id(): string | undefined;
     /**
      * Return all Attributes
      */
-    attributes(): JsonApi.Attributes;
+    attributes(): D["attributes"];
     /**
      * Return a single Attribute value
      *
@@ -52,15 +50,12 @@ declare class ApiResourceObject<D extends JsonApi.NewResourceObject = JsonApi.Ne
     attribute(name: string): {} | undefined;
     /**
      * Return all iRelationships
-     *
-     * @return {Object}
      */
-    relationships(): any;
+    relationships(): {};
     /**
      * Return a single Relationship value
      *
-     * @param  name
-     * @return ResourceObject|ResourceObject[]
+     * @param name
      */
     relationship(name: string): any;
     /**
@@ -68,7 +63,7 @@ declare class ApiResourceObject<D extends JsonApi.NewResourceObject = JsonApi.Ne
      *
      * @param payload
      */
-    update(payload?: JsonApi.Attributes): ApiResourceObject<D>;
+    update(payload?: Attributes): ApiResourceObject<D>;
     /**
      * Add a relationship to the ResourceObject by type and id
      *

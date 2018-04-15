@@ -1,8 +1,8 @@
 import 'jest';
 import { lensPath, map, set } from 'ramda';
 
-import ResourceObject from '../src/ResourceObject';
-import JsonApiResponse from '../src/JsonApiResponse';
+import ResourceObject from '../src/ApiResourceObject';
+import JsonApiResponse from '../src/ApiResponse';
 import * as JsonApi from '../src/structure';
 
 import { Article, ArticleItemResponse } from './mocks/types';

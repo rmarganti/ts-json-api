@@ -87,4 +87,4 @@ class ApiResponse<D extends JsonApi.Response = JsonApi.Response> {
     }
 }
 
-export default Response;
+export default ApiResponse;
