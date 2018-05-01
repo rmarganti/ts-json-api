@@ -4,6 +4,17 @@
   "license": "MIT",
   "description": "Typescript definitions for jsonapi.org schema",
   "author": "Ryan Marganti <ryanmarganti@soulsizzle.com>",
+  "keywords": [
+    "typescript",
+    "jsonapi",
+    "json api",
+    "jsonapi.org"
+  ],
+  "homepage": "https://github.com/rmarganti/ts-json-api#readme",
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/rmarganti/ts-json-api"
+  },
   "main": "./dist/index.js",
   "scripts": {
     "build": "rimraf ./dist && rimraf ./types && tsc",
