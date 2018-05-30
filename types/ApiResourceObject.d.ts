@@ -92,7 +92,7 @@ declare class ApiResourceObject<D extends NewResourceObject = NewResourceObject>
      *
      * @return ResourceObject
      */
-    withoutRelationships(): ApiResourceObject<D>;
+    withoutRelationships(): any;
     /**
      * Output ResourceObject as a JSON-serializable object
      *

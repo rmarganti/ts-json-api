@@ -2,7 +2,7 @@
  * Attributes describing a Resource Object
  */
 export interface Attributes {
-    [index: string]: string | number | boolean | object;
+    [index: string]: string | number | boolean | object | undefined;
 }
 /**
  * Describes a single Relationship type between a
