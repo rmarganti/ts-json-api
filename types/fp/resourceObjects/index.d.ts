@@ -1,4 +1,3 @@
-/// <reference types="ramda" />
 import * as JsonApi from '../../structure';
 /**
  * Resource Object-related

@@ -1,4 +1,3 @@
-/// <reference types="ramda" />
 /**
  * Atttribute-related functions. Only applies to a single Resource Object.
  */

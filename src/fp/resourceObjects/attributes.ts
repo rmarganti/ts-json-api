@@ -47,7 +47,7 @@ export const attributeOr = curry(
         defaultValue: any,
         attributeName: string,
         resourceObject: JsonApi.ResourceObject
-    ) => pathOr(defaultValue, ['attributes', name], resourceObject)
+    ) => pathOr(defaultValue, ['attributes', attributeName], resourceObject)
 );
 
 /**

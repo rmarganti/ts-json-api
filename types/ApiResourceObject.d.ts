@@ -92,7 +92,7 @@ declare class ApiResourceObject<D extends NewResourceObject = NewResourceObject>
      *
      * @return ResourceObject
      */
-    withoutRelationships(): any;
+    withoutRelationships(): ApiResourceObject<Pick<NewResourceObject, "attributes" | "type" | "id" | "links">>;
     /**
      * Output ResourceObject as a JSON-serializable object
      *

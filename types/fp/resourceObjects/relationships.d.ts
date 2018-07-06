@@ -1,4 +1,3 @@
-/// <reference types="ramda" />
 import { CurriedFunction2, CurriedFunction3, CurriedFunction4 } from 'ramda';
 import * as JsonApi from '../../structure';
 /**

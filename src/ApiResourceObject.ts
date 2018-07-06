@@ -1,20 +1,15 @@
 import {
-    assocPath,
     append,
-    clone,
     identity,
     ifElse,
-    flip,
     lensPath,
     lensProp,
-    map,
     omit,
     over,
     path,
     pipe,
     prop,
     propOr,
-    props,
     propEq,
     reject,
     set,
@@ -231,7 +226,9 @@ class ApiResourceObject<D extends NewResourceObject = NewResourceObject> {
      * @return ResourceObject
      */
     withoutRelationships() {
-        return this.map(omit(['relationships']));
+        return ApiResourceObject.of(
+            omit(['relationships'], this.data as NewResourceObject)
+        );
     }
 
     /**
