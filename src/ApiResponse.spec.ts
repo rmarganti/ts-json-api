@@ -1,26 +1,26 @@
 import 'jest';
 import { lensPath, set } from 'ramda';
 
-import ResourceObject from '../src/ApiResourceObject';
-import JsonApiResponse from '../src/ApiResponse';
+import { ApiResourceObject } from '../src/ApiResourceObject';
+import { ApiResponse } from '../src/ApiResponse';
 
 import { itemResponse } from '../__mocks__/itemResponse';
 import { ArticleItemResponse } from '../__mocks__/types';
 
 describe('JsonApiResponse', () => {
-    let jsonApiResponse: JsonApiResponse<ArticleItemResponse>;
+    let jsonApiResponse: ApiResponse<ArticleItemResponse>;
 
     beforeEach(() => {
-        jsonApiResponse = JsonApiResponse.of(itemResponse);
+        jsonApiResponse = ApiResponse.of(itemResponse);
     });
 
     it('builds a new JsonApiResponse', () => {
         expect(jsonApiResponse.hasError()).toBeFalsy;
         expect(jsonApiResponse.errors()).toEqual([]);
-        expect(jsonApiResponse.data()).toBeInstanceOf(ResourceObject);
+        expect(jsonApiResponse.data()).toBeInstanceOf(ApiResourceObject);
 
         expect(Array.isArray(jsonApiResponse.included())).toBeTruthy;
-        expect(jsonApiResponse.included()[0]).toBeInstanceOf(ResourceObject);
+        expect(jsonApiResponse.included()[0]).toBeInstanceOf(ApiResourceObject);
     });
 
     it('expands a relationship to the full include', () => {

@@ -2,7 +2,7 @@ import { clone } from 'ramda';
 
 import { Error } from './types';
 
-class ApiError {
+export class ApiError {
     private error: Error;
 
     constructor(error: Error) {
@@ -22,5 +22,3 @@ class ApiError {
         return clone(this.error);
     }
 }
-
-export default ApiError;

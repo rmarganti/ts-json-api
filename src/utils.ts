@@ -1,6 +1,6 @@
 import { flip, ifElse, map, merge, propEq } from 'ramda';
 
-import ApiResourceObject from './ApiResourceObject';
+import { ApiResourceObject } from './ApiResourceObject';
 import { ResourceObject } from './types';
 
 /**

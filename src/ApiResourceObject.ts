@@ -9,8 +9,8 @@ import {
     path,
     pipe,
     prop,
-    propOr,
     propEq,
+    propOr,
     reject,
     set
 } from 'ramda';
@@ -23,7 +23,9 @@ import {
     mergeReverse
 } from './utils';
 
-class ApiResourceObject<D extends NewResourceObject = NewResourceObject> {
+export class ApiResourceObject<
+    D extends NewResourceObject = NewResourceObject
+> {
     private data: D;
 
     constructor(resourceObject: D) {
@@ -242,5 +244,3 @@ class ApiResourceObject<D extends NewResourceObject = NewResourceObject> {
         )(this.data);
     }
 }
-
-export default ApiResourceObject;

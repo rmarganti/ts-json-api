@@ -1,7 +1,7 @@
 import 'jest';
 import { clone, lensPath, set } from 'ramda';
 
-import ApiResourceObject from '../src/ApiResourceObject';
+import { ApiResourceObject } from '../src/ApiResourceObject';
 
 import { itemResponse } from '../__mocks__/itemResponse';
 

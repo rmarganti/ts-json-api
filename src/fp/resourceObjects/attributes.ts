@@ -4,7 +4,7 @@
 
 import { assocPath, curry, lensProp, over, path, pathOr, prop } from 'ramda';
 
-import * as JsonApi from '../../types';
+import { Attributes, ResourceObject } from '../../types';
 import { mergeReverse } from '../../utils';
 
 /**
@@ -12,7 +12,7 @@ import { mergeReverse } from '../../utils';
  *
  * @param resourceObject
  */
-export const attributes = (resourceObject: JsonApi.ResourceObject) =>
+export const attributes = (resourceObject: ResourceObject) =>
     prop('attributes', resourceObject);
 
 /**
@@ -22,7 +22,7 @@ export const attributes = (resourceObject: JsonApi.ResourceObject) =>
  * @param resourceObject
  */
 export const attribute = curry(
-    (attributeName: string, resourceObject: JsonApi.ResourceObject) =>
+    (attributeName: string, resourceObject: ResourceObject) =>
         path(['attributes', attributeName], resourceObject)
 );
 
@@ -36,7 +36,7 @@ export const attributeOr = curry(
     (
         defaultValue: any,
         attributeName: string,
-        resourceObject: JsonApi.ResourceObject
+        resourceObject: ResourceObject
     ) => pathOr(defaultValue, ['attributes', attributeName], resourceObject)
 );
 
@@ -48,11 +48,8 @@ export const attributeOr = curry(
  * @param resourceObject
  */
 export const setAttribute = curry(
-    (
-        attributeName: string,
-        value: any,
-        resourceObject: JsonApi.ResourceObject
-    ) => assocPath(['attributes', attributeName], value, resourceObject)
+    (attributeName: string, value: any, resourceObject: ResourceObject) =>
+        assocPath(['attributes', attributeName], value, resourceObject)
 );
 
 /**
@@ -62,8 +59,6 @@ export const setAttribute = curry(
  * @param resourceObject
  */
 export const updateAttributes = curry(
-    (
-        payload: JsonApi.Attributes = {},
-        resourceObject: JsonApi.ResourceObject
-    ) => over(lensProp('attributes'), mergeReverse(payload), resourceObject)
+    (payload: Attributes = {}, resourceObject: ResourceObject) =>
+        over(lensProp('attributes'), mergeReverse(payload), resourceObject)
 );

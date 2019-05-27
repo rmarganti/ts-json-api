@@ -1,11 +1,11 @@
 import { clone, path, prop } from 'ramda';
 
-import ApiError from './ApiError';
-import ApiResourceObject from './ApiResourceObject';
+import { ApiError } from './ApiError';
+import { ApiResourceObject } from './ApiResourceObject';
 import { Error, Response, ResponseWithMetaData } from './types';
 import { convertToApiResourceObjectOrObjects } from './utils';
 
-class ApiResponse<D extends Response = Response> {
+export class ApiResponse<D extends Response = Response> {
     private response: D;
 
     constructor(response: D) {
@@ -86,5 +86,3 @@ class ApiResponse<D extends Response = Response> {
         return clone(this.response);
     }
 }
-
-export default ApiResponse;
