@@ -1,20 +1,10 @@
 /**
- * Atttribute-related functions. Only applies to a single Resource Object.
+ * Attribute-related functions. Only applies to a single Resource Object.
  */
 
-import {
-    assocPath,
-    curry,
-    lensProp,
-    over,
-    path,
-    pathOr,
-    prop,
-    CurriedFunction2,
-    CurriedFunction3,
-} from 'ramda';
+import { assocPath, curry, lensProp, over, path, pathOr, prop } from 'ramda';
 
-import * as JsonApi from '../../structure';
+import * as JsonApi from '../../types';
 import { mergeReverse } from '../../utils';
 
 /**

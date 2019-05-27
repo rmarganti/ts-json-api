@@ -1,19 +1,20 @@
 import { clone } from 'ramda';
-import * as JsonApi from './structure';
+
+import { Error } from './types';
 
 class ApiError {
-    private error: JsonApi.Error;
+    private error: Error;
 
-    constructor(error: JsonApi.Error) {
+    constructor(error: Error) {
         this.error = error;
         Object.freeze(this);
     }
 
-    static of(error: JsonApi.Error): ApiError {
+    static of(error: Error): ApiError {
         return new ApiError(error);
     }
 
-    map(f: (x: JsonApi.Error) => JsonApi.Error) {
+    map(f: (x: Error) => Error) {
         return ApiError.of(f(this.error));
     }
 

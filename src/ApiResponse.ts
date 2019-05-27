@@ -1,11 +1,11 @@
-import { clone, path, pipe, prop, propOr } from 'ramda';
+import { clone, path, prop } from 'ramda';
 
-import * as JsonApi from './structure';
 import ApiError from './ApiError';
 import ApiResourceObject from './ApiResourceObject';
+import { Error, Response, ResponseWithMetaData } from './types';
 import { convertToApiResourceObjectOrObjects } from './utils';
 
-class ApiResponse<D extends JsonApi.Response = JsonApi.Response> {
+class ApiResponse<D extends Response = Response> {
     private response: D;
 
     constructor(response: D) {
@@ -13,7 +13,7 @@ class ApiResponse<D extends JsonApi.Response = JsonApi.Response> {
         Object.freeze(this);
     }
 
-    static of<S extends JsonApi.Response>(response: S): ApiResponse<S> {
+    static of<S extends Response>(response: S): ApiResponse<S> {
         return new ApiResponse(response);
     }
 
@@ -33,7 +33,7 @@ class ApiResponse<D extends JsonApi.Response = JsonApi.Response> {
      * Retrieve all errors as an array of ApiErrors
      */
     errors(): ApiError[] {
-        const errors: JsonApi.Error[] = this.response.errors || [];
+        const errors: Error[] = this.response.errors || [];
         return errors.map(ApiError.of);
     }
 
@@ -72,11 +72,11 @@ class ApiResponse<D extends JsonApi.Response = JsonApi.Response> {
     }
 
     meta(name: string) {
-        const metaFinder: (response: JsonApi.ResponseWithMetaData) => any = name
+        const metaFinder: (response: ResponseWithMetaData) => any = name
             ? path(['meta', name])
             : prop('meta');
 
-        return metaFinder(this.response as JsonApi.ResponseWithMetaData);
+        return metaFinder(this.response as ResponseWithMetaData);
     }
 
     /**

@@ -1,7 +1,6 @@
 import { prop } from 'ramda';
 
-import * as JsonApi from '../../structure';
-import { hasGivenId, mergeReverse } from '../../utils';
+import { Attributes } from '../../types';
 
 /**
  * Resource Object-related
@@ -18,12 +17,12 @@ export * from './relationships';
  */
 export const buildResourceObject = (
     type: string,
-    attributes: JsonApi.Attributes,
+    attributes: Attributes,
     id?: string
 ) => ({
     attributes,
     id,
-    type,
+    type
 });
 
 /**

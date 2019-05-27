@@ -1,16 +1,15 @@
 import { flip, ifElse, map, merge, propEq } from 'ramda';
 
-import * as JsonApi from './structure';
 import ApiResourceObject from './ApiResourceObject';
+import { ResourceObject } from './types';
 
 /**
  * Converts a Resource Object to an ResourceObject
  *
  * @param resourceObject
  */
-export const convertToApiResourceObject = (
-    resourceObject: JsonApi.ResourceObject
-) => new ApiResourceObject(resourceObject);
+export const convertToApiResourceObject = (resourceObject: ResourceObject) =>
+    new ApiResourceObject(resourceObject);
 
 /**
  * If an Array is provided, it is converted to an Array of ApiResourceObjects.

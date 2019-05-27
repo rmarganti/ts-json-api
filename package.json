@@ -1,54 +1,40 @@
 {
-  "name": "ts-json-api",
-  "version": "0.9.3",
-  "license": "MIT",
-  "description": "Typescript definitions for jsonapi.org schema",
-  "author": "Ryan Marganti <ryanmarganti@soulsizzle.com>",
-  "keywords": [
-    "typescript",
-    "jsonapi",
-    "json api",
-    "jsonapi.org"
+  "name": "ts-json-api-next",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "umd:main": "dist/ts-json-api-next.umd.production.js",
+  "module": "dist/ts-json-api-next.es.production.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist"
   ],
-  "homepage": "https://github.com/rmarganti/ts-json-api#readme",
-  "repository": {
-    "type" : "git",
-    "url" : "https://github.com/rmarganti/ts-json-api"
-  },
-  "main": "./dist/index.js",
   "scripts": {
-    "build": "rimraf ./dist && rimraf ./types && tsc",
-    "lint": "eslint **/*.ts",
-    "test": "jest"
+    "start": "tsdx watch",
+    "build": "tsdx build",
+    "test": "tsdx test"
   },
-  "types": "./types",
-  "dependencies": {
-    "ramda": "^0.25.0"
-  },
+  "peerDependencies": {},
   "devDependencies": {
-    "@types/jest": "^21.1.6",
-    "@types/node": "^8.0.53",
-    "@types/ramda": "^0.25.6",
-    "eslint": "^4.18.1",
-    "eslint-config-prettier": "^2.9.0",
-    "eslint-plugin-prettier": "^2.6.0",
-    "jest": "^21.2.1",
-    "prettier": "^1.11.1",
-    "rimraf": "^2.6.2",
-    "ts-jest": "^21.2.3",
-    "typescript": "^2.8.0",
-    "typescript-eslint-parser": "^14.0.0"
+    "@types/jest": "^24.0.13",
+    "@types/ramda": "^0.26.8",
+    "husky": "^2.3.0",
+    "prettier": "^1.17.1",
+    "pretty-quick": "^1.11.0",
+    "tsdx": "^0.5.11",
+    "tslib": "^1.9.3",
+    "typescript": "^3.4.5"
   },
   "jest": {
-    "transform": {
-      ".(ts|tsx)": "<rootDir>/__tests__/preprocessor.js"
-    },
-    "testRegex": "(\\.(test|spec))\\.(ts|tsx|js)$",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js",
-      "json"
+    "testMatch": [
+      "<rootDir>/src/**/*.(spec|test).{ts,tsx}"
     ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
+  },
+  "dependencies": {
+    "ramda": "^0.26.1"
   }
 }

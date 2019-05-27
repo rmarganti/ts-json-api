@@ -12,15 +12,15 @@ import {
     propOr,
     propEq,
     reject,
-    set,
+    set
 } from 'ramda';
 
-import { Attributes, NewResourceObject } from './structure';
+import { Attributes, NewResourceObject } from './types';
 
 import {
     convertToApiResourceObjectOrObjects,
     isDefined,
-    mergeReverse,
+    mergeReverse
 } from './utils';
 
 class ApiResourceObject<D extends NewResourceObject = NewResourceObject> {
@@ -64,23 +64,21 @@ class ApiResourceObject<D extends NewResourceObject = NewResourceObject> {
         return new ApiResourceObject({
             type,
             id,
-            attributes,
+            attributes
         });
     }
 
     /**
      * Return the type
-     *
-     * @return {String}
      */
-    type(): string {
+    type() {
         return prop('type', this.data);
     }
 
     /**
      * Return the ID
      */
-    id(): string | undefined {
+    id() {
         return prop('id', this.data);
     }
 
@@ -101,7 +99,7 @@ class ApiResourceObject<D extends NewResourceObject = NewResourceObject> {
     }
 
     /**
-     * Return all iRelationships
+     * Return all Relationships
      */
     relationships() {
         const relationships = propOr({}, 'relationships', this.data);
@@ -109,7 +107,7 @@ class ApiResourceObject<D extends NewResourceObject = NewResourceObject> {
         return Object.keys(relationships).reduce(
             (carrier: object, name: string) => ({
                 ...carrier,
-                [name]: this.relationship(name),
+                [name]: this.relationship(name)
             }),
             {}
         );
@@ -156,7 +154,7 @@ class ApiResourceObject<D extends NewResourceObject = NewResourceObject> {
         relationship: string,
         typeOrResourceObject: string | ApiResourceObject,
         id?: string
-    ): ApiResourceObject {
+    ) {
         const addRelationship = over(
             lensPath(['relationships', relationship, 'data']),
             append({
@@ -167,7 +165,7 @@ class ApiResourceObject<D extends NewResourceObject = NewResourceObject> {
                 id:
                     typeOrResourceObject instanceof ApiResourceObject
                         ? typeOrResourceObject.id()
-                        : id,
+                        : id
             })
         );
 
@@ -213,7 +211,7 @@ class ApiResourceObject<D extends NewResourceObject = NewResourceObject> {
                 id:
                     typeOrResourceObject instanceof ApiResourceObject
                         ? typeOrResourceObject.id()
-                        : id,
+                        : id
             }
         );
 

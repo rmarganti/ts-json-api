@@ -42,8 +42,8 @@ type ArticleCollectionResponse = Response<Article[]>;
 interface Person extends ResourceObject {
     type: 'people';
     attributes: {
-        'first-name': string;
-        'last-name': string;
+        'firstName': string;
+        'lastName': string;
         twitter: string;
     };
 }
