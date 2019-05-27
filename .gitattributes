@@ -1,5 +1,0 @@
-*.d.ts -diff
-*.js -diff
-*.js.map -diff
-yarn.lock -diff
-

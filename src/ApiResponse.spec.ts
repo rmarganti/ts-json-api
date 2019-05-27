@@ -1,12 +1,11 @@
 import 'jest';
-import { lensPath, map, set } from 'ramda';
+import { lensPath, set } from 'ramda';
 
 import ResourceObject from '../src/ApiResourceObject';
 import JsonApiResponse from '../src/ApiResponse';
-import * as JsonApi from '../src/structure';
 
-import { Article, ArticleItemResponse } from './mocks/types';
-const itemResponse: Article = require('./mocks/itemResponse.json');
+import { itemResponse } from '../__mocks__/itemResponse';
+import { ArticleItemResponse } from '../__mocks__/types';
 
 describe('JsonApiResponse', () => {
     let jsonApiResponse: JsonApiResponse<ArticleItemResponse>;
@@ -28,7 +27,7 @@ describe('JsonApiResponse', () => {
         const author = jsonApiResponse.data().relationship('author');
         const expandedAuthor = jsonApiResponse.expandInclude(author);
 
-        expect(expandedAuthor.attribute('first-name')).toEqual('Dan');
+        expect(expandedAuthor!.attribute('firstName')).toEqual('Dan');
     });
 
     it('can be mapped over', () => {
