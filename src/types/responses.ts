@@ -1,5 +1,5 @@
-import { Links, Meta } from './shared';
 import { ResourceObject, ResourceObjectOrObjects } from './resourceObjects';
+import { Links, Meta } from './shared';
 
 /**
  * A Response for sure containing data.
@@ -46,13 +46,6 @@ export type ResponseWithMetaData<
 export type Response<
     D extends ResourceObjectOrObjects = ResourceObjectOrObjects
 > = ResponseWithData<D> | ResponseWithErrors<D> | ResponseWithMetaData<D>;
-
-/**
- * A Request to be sent to a JSON API-compliant server.
- */
-export type Request<
-    D extends ResourceObjectOrObjects = ResourceObjectOrObjects
-> = Response<D>;
 
 /**
  * An Error.

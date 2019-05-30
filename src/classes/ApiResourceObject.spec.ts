@@ -1,9 +1,8 @@
-import 'jest';
 import { clone, lensPath, set } from 'ramda';
 
-import { ApiResourceObject } from '../src/ApiResourceObject';
+import { ApiResourceObject } from './ApiResourceObject';
 
-import { itemResponse } from '../__mocks__/itemResponse';
+import { itemResponse } from '../../__mocks__/itemResponse';
 
 describe('ApiResourceObject', () => {
     const rO = new ApiResourceObject(clone(itemResponse.data));

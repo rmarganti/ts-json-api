@@ -1,6 +1,6 @@
 import { clone } from 'ramda';
 
-import { Error } from './types';
+import { Error } from 'types';
 
 export class ApiError {
     private error: Error;
