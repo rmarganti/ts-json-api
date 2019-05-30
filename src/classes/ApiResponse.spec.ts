@@ -1,11 +1,10 @@
-import 'jest';
 import { lensPath, set } from 'ramda';
 
-import { ApiResourceObject } from '../src/ApiResourceObject';
-import { ApiResponse } from '../src/ApiResponse';
+import { ApiResourceObject } from './ApiResourceObject';
+import { ApiResponse } from './ApiResponse';
 
-import { itemResponse } from '../__mocks__/itemResponse';
-import { ArticleItemResponse } from '../__mocks__/types';
+import { itemResponse } from '../../__mocks__/itemResponse';
+import { ArticleItemResponse } from '../../__mocks__/types';
 
 describe('JsonApiResponse', () => {
     let jsonApiResponse: ApiResponse<ArticleItemResponse>;

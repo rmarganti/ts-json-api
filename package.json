@@ -1,40 +1,45 @@
 {
-  "name": "ts-json-api",
-  "version": "1.0.0-beta",
-  "main": "dist/index.js",
-  "umd:main": "dist/ts-json-api-next.umd.production.js",
-  "module": "dist/ts-json-api-next.es.production.js",
-  "typings": "dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
-  "scripts": {
-    "start": "tsdx watch",
-    "build": "tsdx build",
-    "test": "tsdx test"
-  },
-  "peerDependencies": {},
-  "dependencies": {
-    "ramda": "^0.26.1"
-  },
-  "devDependencies": {
-    "@types/jest": "^24.0.13",
-    "@types/ramda": "^0.26.8",
-    "husky": "^2.3.0",
-    "prettier": "^1.17.1",
-    "pretty-quick": "^1.11.0",
-    "tsdx": "^0.5.11",
-    "tslib": "^1.9.3",
-    "typescript": "^3.4.5"
-  },
-  "jest": {
-    "testMatch": [
-      "<rootDir>/src/**/*.(spec|test).{ts,tsx}"
-    ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "pretty-quick --staged"
+    "name": "ts-json-api",
+    "version": "1.0.0-beta",
+    "author": "Ryan Marganti <ryan.marganti@soulsizzle.com>",
+    "license": "MIT",
+    "main": "dist/index.js",
+    "umd:main": "dist/ts-json-api-next.umd.production.js",
+    "module": "dist/ts-json-api-next.es.production.js",
+    "typings": "dist/index.d.ts",
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "start": "tsdx watch",
+        "build": "tsdx build",
+        "test": "tsdx test"
+    },
+    "peerDependencies": {},
+    "dependencies": {
+        "ramda": "^0.26.1"
+    },
+    "devDependencies": {
+        "@types/jest": "^24.0.13",
+        "@types/ramda": "^0.26.8",
+        "husky": "^2.3.0",
+        "prettier": "^1.17.1",
+        "pretty-quick": "^1.11.0",
+        "tsdx": "^0.6.0",
+        "tslib": "^1.9.3",
+        "typescript": "^3.4.5"
+    },
+    "jest": {
+        "modulePaths": [
+            "<rootDir>/src"
+        ],
+        "testMatch": [
+            "<rootDir>/src/**/*.(spec|test).{ts,tsx}"
+        ]
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "pretty-quick --staged"
+        }
     }
-  }
 }

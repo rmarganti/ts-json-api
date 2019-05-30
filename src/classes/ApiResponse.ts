@@ -1,9 +1,9 @@
 import { clone, path, prop } from 'ramda';
 
+import { Error, Response, ResponseWithMetaData } from 'types';
+import { convertToApiResourceObjectOrObjects } from 'utils';
 import { ApiError } from './ApiError';
 import { ApiResourceObject } from './ApiResourceObject';
-import { Error, Response, ResponseWithMetaData } from './types';
-import { convertToApiResourceObjectOrObjects } from './utils';
 
 export class ApiResponse<D extends Response = Response> {
     private response: D;

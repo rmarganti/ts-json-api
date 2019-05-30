@@ -15,13 +15,12 @@ import {
     set
 } from 'ramda';
 
-import { Attributes, NewResourceObject } from './types';
-
+import { Attributes, NewResourceObject } from 'types';
 import {
     convertToApiResourceObjectOrObjects,
     isDefined,
     mergeReverse
-} from './utils';
+} from 'utils';
 
 export class ApiResourceObject<
     D extends NewResourceObject = NewResourceObject
