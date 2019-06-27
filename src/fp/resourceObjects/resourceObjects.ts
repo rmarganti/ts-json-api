@@ -1,6 +1,6 @@
 import { prop } from 'ramda';
 
-import { Attributes } from 'types';
+import { Attributes } from '../../types';
 
 /**
  * Build a new Resource Object

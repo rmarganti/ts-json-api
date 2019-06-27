@@ -1,7 +1,7 @@
 import { flip, ifElse, map, merge, propEq } from 'ramda';
 
-import { ApiResourceObject } from 'classes/ApiResourceObject';
-import { ResourceObject } from 'types';
+import { ApiResourceObject } from './classes/ApiResourceObject';
+import { ResourceObject } from './types';
 
 /**
  * Converts a Resource Object to an ResourceObject

@@ -1,7 +1,7 @@
 {
     "name": "ts-json-api",
     "version": "1.0.0-beta",
-    "author": "Ryan Marganti <ryan.marganti@soulsizzle.com>",
+    "author": "Ryan Marganti <ryanmarganti@soulsizzle.com>",
     "license": "MIT",
     "main": "dist/index.js",
     "umd:main": "dist/ts-json-api-next.umd.production.js",
@@ -30,9 +30,6 @@
         "typescript": "^3.4.5"
     },
     "jest": {
-        "modulePaths": [
-            "<rootDir>/src"
-        ],
         "testMatch": [
             "<rootDir>/src/**/*.(spec|test).{ts,tsx}"
         ]

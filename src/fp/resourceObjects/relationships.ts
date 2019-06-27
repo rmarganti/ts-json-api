@@ -9,8 +9,8 @@ import {
     set
 } from 'ramda';
 
-import { ResourceObject } from 'types';
-import { hasGivenId } from 'utils';
+import { ResourceObject } from '../../types';
+import { hasGivenId } from '../../utils';
 
 /**
  * Return all relationships

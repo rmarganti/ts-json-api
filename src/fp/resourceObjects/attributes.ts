@@ -4,8 +4,8 @@
 
 import { assocPath, curry, lensProp, over, path, pathOr, prop } from 'ramda';
 
-import { Attributes, ResourceObject } from 'types';
-import { mergeReverse } from 'utils';
+import { Attributes, ResourceObject } from '../../types';
+import { mergeReverse } from '../../utils';
 
 /**
  * Return all attributes.

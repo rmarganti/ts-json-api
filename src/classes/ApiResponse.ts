@@ -1,7 +1,7 @@
 import { clone, path, prop } from 'ramda';
 
-import { Error, Response, ResponseWithMetaData } from 'types';
-import { convertToApiResourceObjectOrObjects } from 'utils';
+import { Error, Response, ResponseWithMetaData } from '../types';
+import { convertToApiResourceObjectOrObjects } from '../utils';
 import { ApiError } from './ApiError';
 import { ApiResourceObject } from './ApiResourceObject';
 

@@ -15,12 +15,12 @@ import {
     set
 } from 'ramda';
 
-import { Attributes, NewResourceObject } from 'types';
+import { Attributes, NewResourceObject, Relationships } from '../types';
 import {
     convertToApiResourceObjectOrObjects,
     isDefined,
     mergeReverse
-} from 'utils';
+} from '../utils';
 
 export class ApiResourceObject<
     D extends NewResourceObject = NewResourceObject
@@ -103,7 +103,11 @@ export class ApiResourceObject<
      * Return all Relationships
      */
     relationships() {
-        const relationships = propOr({}, 'relationships', this.data);
+        const relationships: Relationships = propOr(
+            {},
+            'relationships',
+            this.data
+        );
 
         return Object.keys(relationships).reduce(
             (carrier: object, name: string) => ({
@@ -235,7 +239,7 @@ export class ApiResourceObject<
      *
      * @param includeRelationships
      */
-    toJSON(includeRelationships: boolean = false) {
+    toJSON(includeRelationships: boolean = false): D {
         return ifElse(
             () => includeRelationships,
             omit(['relationships']),
