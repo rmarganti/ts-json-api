@@ -50,7 +50,7 @@ export interface Response<
     included?: ResourceObject[];
     links?: Links;
     errors?: [Error];
-    meta: Meta;
+    meta?: Meta;
 }
 
 /**
