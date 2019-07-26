@@ -4,48 +4,54 @@ import { Links, Meta } from './shared';
 /**
  * A Response for sure containing data.
  */
-export type ResponseWithData<
+export interface ResponseWithData<
     D extends ResourceObjectOrObjects = ResourceObjectOrObjects
-> = {
+> {
     data: D;
     included?: ResourceObject[];
     links?: Links;
     errors?: [Error];
     meta?: Meta;
-};
+}
 
 /**
  * A Response for sure containing Errors.
  */
-export type ResponseWithErrors<
+export interface ResponseWithErrors<
     D extends ResourceObjectOrObjects = ResourceObjectOrObjects
-> = {
+> {
     data?: D;
     included?: ResourceObject[];
     links?: Links;
     errors: [Error];
     meta?: Meta;
-};
+}
 
 /**
  * A Response for sure containing top-level Meta data.
  */
-export type ResponseWithMetaData<
+export interface ResponseWithMetaData<
     D extends ResourceObjectOrObjects = ResourceObjectOrObjects
-> = {
+> {
     data?: D;
     included?: ResourceObject[];
     links?: Links;
     errors?: [Error];
     meta: Meta;
-};
+}
 
 /**
  * A Response from a JSON API-compliant server.
  */
-export type Response<
+export interface Response<
     D extends ResourceObjectOrObjects = ResourceObjectOrObjects
-> = ResponseWithData<D> | ResponseWithErrors<D> | ResponseWithMetaData<D>;
+> {
+    data?: D;
+    included?: ResourceObject[];
+    links?: Links;
+    errors?: [Error];
+    meta: Meta;
+}
 
 /**
  * An Error.
