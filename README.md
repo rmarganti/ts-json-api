@@ -1,4 +1,6 @@
-# ts-json-api
+# [RELOCATED ⛔️] ts-json-api
+
+NOTICE: This project has moved. Visit its [new home here](https://github.com/rmarganti/json-api/tree/master/packages/ts-json-api).
 
 A collection of TypeScript interfaces and classes for working with [JSONAPI.org](http://jsonapi.org/)-standard requests/responses.
 
